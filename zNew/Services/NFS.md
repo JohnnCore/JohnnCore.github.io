@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Footprinting
 ## Nmap
 ```bash
@@ -20,4 +24,6 @@ $ tree .
 ```
 
 ## Unmounting
-`sudo umount target-NFS`
+```bash
+$ sudo umount target-NFS
+```

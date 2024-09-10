@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Interacting
 **Connecting**
 ```bash
@@ -26,7 +30,7 @@ $ wget -m --no-passive ftp://anonymous:anonymous@10.129.14.136
 **Upload a File**
 ```bash
 ftp> put testupload.txt 
-```
+``` 
 
 # Footprinting
 ## Nmap

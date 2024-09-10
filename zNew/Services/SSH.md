@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Interacting
 ```bash
 $ ssh <USEr>@<IP>

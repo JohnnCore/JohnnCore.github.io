@@ -1,18 +1,8 @@
+---
+layout: default
+---
+
 # Interacting
-## Connecting
-```bash
-$ smbclient -U bob //10.129.42.253/users
-$ smbclient -U user \\\\10.129.42.197\\SHARENAME
-
-# PTH
-$ smbclient.py -hashes":<hash>" <user>@<ip>
-```
-
-## Download Files
-```bash
-smb: \> get prep-prod.txt 
-```
-
 ## Show avaiable shares
 ```bash
 # crackmapexec
@@ -32,6 +22,19 @@ $ smbclient -N -L //10.129.14.128
 - `-N` suppresses the password prompt
 - `-L` want to retrieve a list of available shares on the remote host
 
+## Connecting
+```bash
+$ smbclient -U bob //10.129.42.253/users
+$ smbclient -U user \\\\10.129.42.197\\SHARENAME
+
+# PTH
+$ smbclient.py -hashes":<hash>" <user>@<ip>
+```
+
+## Download Files
+```bash
+smb: \> get prep-prod.txt 
+```
 
 # Footprinting
 ## Nmap

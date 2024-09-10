@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Interacting
 ```bash
 $ telnet 10.129.14.128 25

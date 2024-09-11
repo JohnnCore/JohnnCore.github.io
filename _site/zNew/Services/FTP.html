@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Services/FTP.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Services/FTP.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Services/FTP.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="interacting">Interacting</h1>
+<p><strong>Connecting</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ftp &lt;USER&gt;@&lt;IP&gt; &lt;PORT&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl s_client <span class="nt">-connect</span> 10.129.14.136:21 <span class="nt">-starttls</span> ftp
+</code></pre></div></div>
+
+<p><strong>Recursive Listing</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ftp&gt; <span class="nb">ls</span> <span class="nt">-R</span>
+</code></pre></div></div>
+
+<p><strong>Download Files</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ftp&gt; get Notes.txt
+</code></pre></div></div>
+
+<p><strong>Download All Available Files</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget <span class="nt">-m</span> <span class="nt">--no-passive</span> ftp://anonymous:anonymous@10.129.14.136
+</code></pre></div></div>
+
+<p><strong>Upload a File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ftp&gt; put testupload.txt 
+</code></pre></div></div>
+
+<h1 id="footprinting">Footprinting</h1>
+<h2 id="nmap">Nmap</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap <span class="nt">--script-updatedb</span><span class="sb">`</span>
+<span class="nv">$ </span><span class="nb">sudo </span>nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-A</span> <span class="nt">-p</span> 21 192.168.2.142<span class="sb">`</span>
+</code></pre></div></div>
+
+<h2 id="ftp-bounce-attack">FTP Bounce Attack</h2>
+<p>An FTP bounce attack is a network attack that uses FTP servers to deliver outbound traffic to another device on the network. The attacker uses a PORT command to trick the FTP connection into running commands and getting information from a device other than the intended server.</p>
+
+<p>Consider we are targetting an FTP Server FTP_DMZ exposed to the internet. Another device within the same network, Internal_DMZ, is not exposed to the internet. We can use the connection to the FTP_DMZ server to scan Internal_DMZ using the FTP Bounce attack and obtain information about the server’s open ports. Then, we can use that information as part of our attack against the infrastructure.</p>
+
+<p>The Nmap -b flag can be used to perform an FTP bounce attack:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nmap <span class="nt">-Pn</span> <span class="nt">-v</span> <span class="nt">-n</span> <span class="nt">-p80</span> <span class="nt">-b</span> anonymous:password@10.10.110.213 172.17.0.2<span class="sb">`</span>
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

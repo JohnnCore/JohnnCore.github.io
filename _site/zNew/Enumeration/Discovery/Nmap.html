@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Enumeration/Discovery/Nmap.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Enumeration/Discovery/Nmap.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Enumeration/Discovery/Nmap.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="nmap">Nmap:</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-script</span> vuln &lt;IP&gt;<span class="sb">`</span>
+<span class="nv">$ </span>nmap &lt;IP&gt; <span class="nt">-p-</span><span class="sb">`</span>
+<span class="nv">$ </span>nmap &lt;IP&gt; <span class="nt">-p</span> &lt;PORT/S&gt;<span class="sb">`</span>
+<span class="nv">$ </span>nmap <span class="nt">-sU</span> 10.10.10.10<span class="sb">`</span>
+
+<span class="nv">$ </span>nmap <span class="nt">-T4</span> <span class="nt">-p-</span> <span class="nt">-v</span> &lt;IP&gt;
+<span class="nv">$ </span>nmap <span class="nt">-T4</span> <span class="nt">-p</span> &lt;PORT/S&gt; <span class="nt">-A</span> <span class="nt">-sCV</span> <span class="nt">-v</span> &lt;IP&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- `-sC` for the default scripts
+- `-sV` for Version and OS Enumeration
+- `-sU` UDP port scan
+- `-sn`	Disables port scanning
+- `-script vuln` Check for vulnerabilities using the Nmap scripting engine
+- `-p-` Port scan all ports
+- `-p` Port scan for port x
+- `-v` Increase the verbosity level (use -vv or more for greater effect)
+</code></pre></div></div>
+
+<h2 id="host-scan">Host Scan</h2>
+<p>| Scanning Options   | Description                                    |
+|——————–|————————————————|
+| 10.129.2.28        | Scans the specified target.                   |
+| -Pn                | Disables ICMP Echo requests.                   |
+| -O                 | Performs operating system detection scan.                 |
+| -sn                | Disables port scanning. | 
+| -PE                | Performs the ping scan by using ‘ICMP Echo requests’ against the target. |
+| –disable-arp-ping | Disables ARP ping.                             |
+| –packet-trace     | Shows all packets sent and received.          |
+| –reason           | Displays the reason a port is in a particular state. |</p>
+
+<h2 id="port-scanning">Port Scanning</h2>
+<p>| Scanning Options   | Description                                    |
+|——————–|————————————————|
+| -p-                | Scans all ports.                              |
+| -p 137             | Scans only the specified port.                |
+| -sV                | Performs service version detection on specified ports. |
+| -sC	| Perform a Script Scan with scripts that are categorized as “default”. |
+| -F                 | Scans top 100 ports.         |
+| -sU                | Performs a UDP scan.         |
+| –top-ports=<num>  | Scans the specified top ports that have been defined as most frequent. |</num></p>
+
+<h2 id="tunning">Tunning</h2>
+<p>| Scanning Options   | Description                                    |
+|——————–|————————————————|
+| -v	| Increases the verbosity of the scan, which displays more detailed information. |
+| -A                 | Performs service detection, OS detection, traceroute, and uses default scripts to scan the target. |
+| -T &lt;0-5&gt;               | Specifies the insane timing template.  |
+| –script &lt;script,&gt; | Uses specified NSE scripts.  |
+| –initial-rtt-timeout 50ms | Sets the specified time value as initial RTT timeout. |
+| –max-rtt-timeout 100ms   | Sets the specified time value as maximum RTT timeout.  |
+| –max-retries 0    | Sets the number of retries that will be performed during the scan. |
+| –min-parallelism <number> | which frequency |
+| --min-rate 300     | Sets the minimum number of packets to be sent per second.         |
+| -n                 | Disables DNS resolution.                       |</number></p>
+
+<h2 id="evasion">Evasion</h2>
+<p>| Scanning Options   | Description                                    |
+|——————–|————————————————|
+| -sS	| Performs SYN scan on specified ports. |
+| -sA	| Performs ACK scan on specified ports |
+| -S                 | Scans the target using different source IP addresses.    |
+| -D RND:5	| Generates five random IP addresses that indicates the source IP the connection comes from. |
+| –source-port 53	| Performs the scans from specified source port. |</p>
+
+<h2 id="save-the-result">Save the result</h2>
+<p>| Scanning Options   | Description                                    |
+|——————–|————————————————|
+| -oA target         | Saves the results in all formats, starting the name of each file with ‘target’. |</p>
+
+<h2 id="host-discovery">Host Discovery</h2>
+<h3 id="scan-network-range">Scan Network Range</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap 10.129.2.0/24 <span class="nt">-sn</span> <span class="nt">-oA</span> tnet | <span class="nb">grep </span><span class="k">for</span> | <span class="nb">cut</span> <span class="nt">-d</span><span class="s2">" "</span> <span class="nt">-f5</span>
+</code></pre></div></div>
+
+<h3 id="scan-ip-list">Scan IP List</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nmap <span class="nt">-sn</span> <span class="nt">-oA</span> tnet <span class="nt">-iL</span> hosts.lst | <span class="nb">grep </span><span class="k">for</span> | <span class="nb">cut</span> <span class="nt">-d</span><span class="s2">" "</span> <span class="nt">-f5</span>
+</code></pre></div></div>
+
+<h3 id="scan-multiple-ips">Scan Multiple IPs</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap <span class="nt">-sn</span> <span class="nt">-oA</span> tnet 10.129.2.18 10.129.2.19 10.129.2.20| <span class="nb">grep </span><span class="k">for</span> | <span class="nb">cut</span> <span class="nt">-d</span><span class="s2">" "</span> <span class="nt">-f5</span>
+</code></pre></div></div>
+
+<h2 id="discovering-open-udp-ports">Discovering Open UDP Ports</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap 10.129.2.28 <span class="nt">-F</span> <span class="nt">-sU</span>
+</code></pre></div></div>
+
+<h2 id="different-formats">Different Formats</h2>
+<p><code class="language-plaintext highlighter-rouge">sudo nmap 10.129.2.28 -p- -oA target</code></p>
+
+<p>##</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap <span class="nt">-p</span> 80,443,8000,8080,8180,8888,10000 <span class="nt">--open</span> <span class="nt">-oA</span> web_discovery <span class="nt">-iL</span> scope_list
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

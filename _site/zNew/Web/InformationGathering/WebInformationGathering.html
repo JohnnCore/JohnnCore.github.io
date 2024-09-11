@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Web/InformationGathering/WebInformationGathering.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Web/InformationGathering/WebInformationGathering.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Web/InformationGathering/WebInformationGathering.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="whois">WHOIS</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>whois <span class="nv">$TARGET</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="dns">DNS</h1>
+<h2 id="nslookup--dig">Nslookup &amp; DIG</h2>
+<h3 id="querying-a-records">Querying: A Records</h3>
+<p><code class="language-plaintext highlighter-rouge">nslookup $TARGET</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig facebook.com @1.1.1.1</code></p>
+
+<h3 id="querying-a-records-for-a-subdomain">Querying: A Records for a Subdomain</h3>
+<p><code class="language-plaintext highlighter-rouge">nslookup -query=A $TARGET</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig a www.facebook.com @1.1.1.1</code></p>
+
+<h3 id="querying-ptr-records-for-an-ip-address">Querying: PTR Records for an IP Address</h3>
+<p><code class="language-plaintext highlighter-rouge">nslookup -query=PTR 31.13.92.36</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig -x 31.13.92.36 @1.1.1.1</code></p>
+
+<h3 id="querying-any-existing-records">Querying: ANY Existing Records</h3>
+
+<p><code class="language-plaintext highlighter-rouge">nslookup -query=ANY $TARGET</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig any google.com @8.8.8.8</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig any cloudflare.com @8.8.8.8</code></p>
+
+<h3 id="querying-txt-records">Querying: TXT Records</h3>
+<p><code class="language-plaintext highlighter-rouge">COR33@htb[/htb]$ nslookup -query=TXT $TARGET</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig txt facebook.com @1.1.1.1</code></p>
+
+<h3 id="querying-mx-records">Querying: MX Records</h3>
+<p><code class="language-plaintext highlighter-rouge">nslookup -query=MX $TARGET</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">dig mx facebook.com @1.1.1.1</code></p>
+
+<h3 id="nslookup">Nslookup</h3>
+<p><code class="language-plaintext highlighter-rouge">nslookup $TARGET</code></p>
+
+<h3 id="whois-1">WHOIS</h3>
+<p>` whois 157.240.199.35`</p>
+
+<h1 id="active-infrastructure-identification">Active Infrastructure Identification</h1>
+<h2 id="http-headers">HTTP Headers</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-I</span> <span class="s2">"http://</span><span class="k">${</span><span class="nv">TARGET</span><span class="k">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>There are also other characteristics to take into account while fingerprinting web servers in the response headers. These are:</p>
+
+<ul>
+  <li>
+    <p>X-Powered-By header: This header can tell us what the web app is using. We can see values like PHP, ASP.NET, JSP, etc.</p>
+  </li>
+  <li>
+    <p>Cookies: Cookies are another attractive value to look at as each technology by default has its cookies. Some of the default cookie values are:</p>
+    <ul>
+      <li>.NET: ASPSESSIONID<RANDOM>=<COOKIE_VALUE></COOKIE_VALUE></RANDOM></li>
+      <li>PHP: PHPSESSID=<COOKIE_VALUE></COOKIE_VALUE></li>
+      <li>JAVA: JSESSION=<COOKIE_VALUE></COOKIE_VALUE></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="whatweb">WhatWeb</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>whatweb <span class="nt">-a3</span> https://www.facebook.com <span class="nt">-v</span>
+</code></pre></div></div>
+
+<h2 id="wappalyzer">Wappalyzer</h2>
+
+<h2 id="wafw00f">wafw00f</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pip3 <span class="nb">install </span>git+https://github.com/EnableSecurity/wafw00f
+<span class="nv">$ </span>wafw00f &lt;domain&gt;
+</code></pre></div></div>
+
+<h1 id="subdomains">Subdomains</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dnsenum <span class="nt">--enum</span> inlanefreight.com <span class="nt">-f</span>  /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt 
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Living off The Land
 - [LOLBAS Project for Windows Binaries](https://lolbas-project.github.io/)
 - [GTFOBins for Linux Binaries](https://gtfobins.github.io/)

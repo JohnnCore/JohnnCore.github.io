@@ -2,5 +2,5 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 remote_theme: pages-themes/hacker@v0.2.0
 plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
-title: [Pentest CheatSheet]
-description: [To showcase my mad skills to my future employer.]
+title: Pentest CheatSheet
+description: Pentest CheatSheet

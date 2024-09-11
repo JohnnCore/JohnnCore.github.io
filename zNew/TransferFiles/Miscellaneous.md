@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Miscellaneous File Transfer Methods
 ## File Transfer with Netcat and Ncat
 **NetCat - Target Machine - Listening on Port 8000**

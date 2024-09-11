@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Pivoting, Tunneling, and Port Forwarding
 ## SSH Local Port Forwarding
 Forward port 3306 from 10.129.202.64 to localhost 1234

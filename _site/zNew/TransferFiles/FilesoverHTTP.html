@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/TransferFiles/FilesoverHTTP.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/TransferFiles/FilesoverHTTP.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/TransferFiles/FilesoverHTTP.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="catching-files-over-https">Catching Files over HTTP/S</h1>
+<h2 id="nginx---enabling-put">Nginx - Enabling PUT</h2>
+<p>When allowing HTTP uploads, it is critical to be 100% positive that users cannot upload web shells and execute them. Apache makes it easy to shoot ourselves in the foot with this, as the PHP module loves to execute anything ending in PHP. Configuring Nginx to use PHP is nowhere near as simple.</p>
+
+<p><strong>Create a Directory to Handle Uploaded Files</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo mkdir</span> <span class="nt">-p</span> /var/www/uploads/SecretUploadDirectory
+</code></pre></div></div>
+
+<p><strong>Change the Owner to www-data</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo chown</span> <span class="nt">-R</span> www-data:www-data /var/www/uploads/SecretUploadDirectory
+</code></pre></div></div>
+
+<p><strong>Create Nginx Configuration File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/nginx/sites-available/upload.conf
+
+server <span class="o">{</span>
+    listen 9001<span class="p">;</span>
+    
+    location /SecretUploadDirectory/ <span class="o">{</span>
+        root    /var/www/uploads<span class="p">;</span>
+        dav_methods PUT<span class="p">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>Symlink our Site to the sites-enabled Directory</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo ln</span> <span class="nt">-s</span> /etc/nginx/sites-available/upload.conf /etc/nginx/sites-enabled/
+</code></pre></div></div>
+
+<p><strong>Start Nginx</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>systemctl restart nginx.service
+</code></pre></div></div>
+
+<p>If we get any error messages, check /var/log/nginx/error.log</p>
+
+<p><strong>Verifying Errors</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tail</span> <span class="nt">-2</span> /var/log/nginx/error.log
+
+2020/11/17 16:11:56 <span class="o">[</span>emerg] 5679#5679: <span class="nb">bind</span><span class="o">()</span> to 0.0.0.0:<span class="sb">`</span>80<span class="sb">`</span> failed <span class="o">(</span>98: Address already <span class="k">in </span>use<span class="sb">`</span><span class="o">)</span>
+2020/11/17 16:11:56 <span class="o">[</span>emerg] 5679#5679: still could not <span class="nb">bind</span><span class="o">()</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ss <span class="nt">-lnpt</span> | <span class="nb">grep </span>80
+
+LISTEN 0      100          0.0.0.0:80        0.0.0.0:<span class="k">*</span>    <span class="nb">users</span>:<span class="o">((</span><span class="s2">"python"</span>,pid<span class="o">=</span><span class="sb">`</span>2811<span class="sb">`</span>,fd<span class="o">=</span>3<span class="o">)</span>,<span class="o">(</span><span class="s2">"python"</span>,pid<span class="o">=</span>2070,fd<span class="o">=</span>3<span class="o">)</span>,<span class="o">(</span><span class="s2">"python"</span>,pid<span class="o">=</span>1968,fd<span class="o">=</span>3<span class="o">)</span>,<span class="o">(</span><span class="s2">"python"</span>,pid<span class="o">=</span>1856,fd<span class="o">=</span>3<span class="o">))</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps <span class="nt">-ef</span> | <span class="nb">grep </span>2811
+
+user65      2811    1856  0 16:05 ?        00:00:04 <span class="sb">`</span>python <span class="nt">-m</span> websockify 80 localhost:5901 <span class="nt">-D</span><span class="sb">`</span>
+root        6720    2226  0 16:14 pts/0    00:00:00 <span class="nb">grep</span> <span class="nt">--color</span><span class="o">=</span>auto 2811
+</code></pre></div></div>
+
+<p><strong>Remove NginxDefault Configuration</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo rm</span> /etc/nginx/sites-enabled/default
+</code></pre></div></div>
+
+<p>Now we can test uploading by using cURL to send a PUT request. In the below example, we will upload the /etc/passwd file to the server and call it users.txt</p>
+
+<p><strong>Upload File Using cURL</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-T</span> /etc/passwd http://localhost:9001/SecretUploadDirectory/users.txt
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo tail</span> <span class="nt">-1</span> /var/www/uploads/SecretUploadDirectory/users.txt 
+
+user65:x:1000:1000:,,,:/home/user65:/bin/bash
+</code></pre></div></div>
+
+<p>Once we have this working, a good test is to ensure the directory listing is not enabled by navigating to http://localhost/SecretUploadDirectory. By default, with Apache, if we hit a directory without an index file (index.html), it will list all the files. This is bad for our use case of exfilling files because most files are sensitive by nature, and we want to do our best to hide them. Thanks to Nginx being minimal, features like that are not enabled by default.</p>
+
+
+      </section>
+    </div>
+  </body>
+</html>

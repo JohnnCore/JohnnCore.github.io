@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Protected File Transfers
 ## File Encryption on Windows
 **Invoke-AESEncryption.ps1**

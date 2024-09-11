@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Transferring Files with Code
 ## Python
 **Python 2 - Download**

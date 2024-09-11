@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Services/WINRM.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Services/WINRM.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Services/WINRM.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="interacting">Interacting</h1>
+<h2 id="connecting">Connecting</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ClearPassword</span>
+<span class="nv">$ </span>evil-winrm <span class="nt">-i</span> &lt;IP&gt; <span class="nt">-u</span> &lt;USER&gt; <span class="nt">-p</span> &lt;PASSWORD&gt;
+
+<span class="c"># PTH</span>
+<span class="nv">$ </span>evil-winrm <span class="nt">-i</span> &lt;ip&gt; <span class="nt">-u</span> &lt;user&gt; <span class="nt">-H</span> &lt;<span class="nb">hash</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h2 id="session-from-windows">Session from Windows</h2>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConvertTo-SecureString</span><span class="w"> </span><span class="s2">"Klmcargo2"</span><span class="w"> </span><span class="nt">-AsPlainText</span><span class="w"> </span><span class="nt">-Force</span><span class="w">
+</span><span class="nv">$cred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new-object</span><span class="w"> </span><span class="nx">System.Management.Automation.PSCredential</span><span class="w"> </span><span class="p">(</span><span class="s2">"INLANEFREIGHT\forend"</span><span class="p">,</span><span class="w"> </span><span class="nv">$password</span><span class="p">)</span><span class="w">
+</span><span class="n">Enter-PSSession</span><span class="w"> </span><span class="nt">-ComputerName</span><span class="w"> </span><span class="nx">ACADEMY-EA-DB01</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="nv">$cred</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="download">Download</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS &gt; download &lt;file&gt;
+</code></pre></div></div>
+
+<h1 id="footprinting">Footprinting</h1>
+<h2 id="nmap-winrm">Nmap WinRM</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nmap <span class="nt">-sV</span> <span class="nt">-sC</span> 10.129.201.248 <span class="nt">-p5985</span>,5986 <span class="nt">--disable-arp-ping</span> <span class="nt">-n</span>
+</code></pre></div></div>
+
+
+      </section>
+    </div>
+  </body>
+</html>

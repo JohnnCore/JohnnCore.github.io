@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # OPEN SERVER:
 ## PYTHON:
 - `python3 -m http.server 1234` local machine

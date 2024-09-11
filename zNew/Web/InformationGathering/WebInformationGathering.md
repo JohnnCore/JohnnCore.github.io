@@ -1,5 +1,13 @@
+---
+layout: default
+---
+
 # WHOIS
-`whois $TARGET`
+```bash
+$ whois $TARGET
+```
+
+* * *
 
 # DNS
 ## Nslookup & DIG

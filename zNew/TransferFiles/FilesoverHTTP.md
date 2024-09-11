@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Catching Files over HTTP/S
 ## Nginx - Enabling PUT
 When allowing HTTP uploads, it is critical to be 100% positive that users cannot upload web shells and execute them. Apache makes it easy to shoot ourselves in the foot with this, as the PHP module loves to execute anything ending in PHP. Configuring Nginx to use PHP is nowhere near as simple.

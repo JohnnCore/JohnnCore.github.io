@@ -36,6 +36,7 @@ Credits:
     - [WMI](zNew/Services/WMI)
 - Web
 - [Shell](zNew/Shell/Shell)
+- [Metasploit](zNew/Metasploit/Metasploit)
 - Privilege Escalation
     - [Linux](zNew/PrivilegeEscalation/Linux)
     - [Windows](zNew/PrivilegeEscalation/Windows)

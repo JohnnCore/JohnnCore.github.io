@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 targeturi = blog
 # Archi
 /usr/share/metasploit-framework 
@@ -39,7 +43,9 @@ msf6 <TYPE>(<MODULE>) > run -j
 ```
 
 ## Target
-`msf6 > show targets`
+```bash
+msf6 > show targets
+```
 
 ## Payloads
 Payload in Metasploit refers to a module that aids the exploit module in (typically) returning a shell to the attacker.
@@ -109,6 +115,8 @@ We copy it into the appropriate directory after downloading the exploit. Note th
 ```bash
 $ cp <MODULE>.rb /usr/share/metasploit-framework/modules/<PATH/><MODULE>.rb
 ```
+
+* * *
 
 # MSFvenom
 ## List 
@@ -185,6 +193,8 @@ $ rar a test2.rar -p test
 $ mv test2.rar test2
 ```
 
+* * *
+
 # Meterpreter
 The Meterpreter Payload is a specific type of multi-faceted, extensible Payload that uses DLL injection to ensure the connection to the victim host is stable and difficult to detect using simple checks and can be configured to be persistent across reboots or system changes. Furthermore, Meterpreter resides entirely in the memory of the remote host and leaves no traces on the hard drive, making it difficult to detect with conventional forensic techniques.
 
@@ -234,7 +244,7 @@ msf6 > set payload windows/x64/meterpreter/reverse_tcp
 
 #### Interactive Shells
 ```bash
-shell
+meterpreter > shell
 ```
 
 #### Commands

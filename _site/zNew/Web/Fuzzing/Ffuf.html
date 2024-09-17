@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pentest CheatSheet | Pentest CheatSheet</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Pentest CheatSheet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pentest CheatSheet" />
+<meta property="og:description" content="Pentest CheatSheet" />
+<link rel="canonical" href="http://localhost:4000/zNew/Web/Fuzzing/Ffuf.html" />
+<meta property="og:url" content="http://localhost:4000/zNew/Web/Fuzzing/Ffuf.html" />
+<meta property="og:site_name" content="Pentest CheatSheet" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pentest CheatSheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Pentest CheatSheet","headline":"Pentest CheatSheet","url":"http://localhost:4000/zNew/Web/Fuzzing/Ffuf.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Pentest CheatSheet</h1>
+        </a>
+        <h2>Pentest CheatSheet</h2>
+
+        <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="directory-fuzzing">Directory Fuzzing</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/FUZZ
+</code></pre></div></div>
+
+<h1 id="extension-fuzzing">Extension Fuzzing</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/web-extensions.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/indexFUZZ
+</code></pre></div></div>
+
+<h1 id="page-fuzzing">Page Fuzzing</h1>
+<p>We will now use the same extension found previous.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/FUZZ.php
+</code></pre></div></div>
+
+<h1 id="recursive-scanning">Recursive Scanning</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/FUZZ <span class="nt">-recursion</span> <span class="nt">-recursion-depth</span> 1 <span class="nt">-e</span> .php <span class="nt">-v</span>
+</code></pre></div></div>
+
+<h1 id="parameters">Parameters</h1>
+<h2 id="get">GET</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/index.php?FUZZ<span class="o">=</span>key <span class="nt">-fs</span> xxx
+</code></pre></div></div>
+
+<h2 id="post">POST</h2>
+<p><code class="language-plaintext highlighter-rouge">Tip: In PHP, "POST" data "content-type" can only accept "application/x-www-form-urlencoded". So, we can set that in "ffuf" with "-H 'Content-Type: application/x-www-form-urlencoded'".</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/index.php <span class="nt">-X</span> POST <span class="nt">-d</span> <span class="s1">'FUZZ=key'</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/x-www-form-urlencoded'</span> <span class="nt">-fs</span> xxx
+</code></pre></div></div>
+
+<p>We can send a POST request with curl</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl http://&lt;URL&gt;:&lt;PORT&gt;/index.php <span class="nt">-X</span> POST <span class="nt">-d</span> <span class="s1">'id=key'</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/x-www-form-urlencoded'</span>
+</code></pre></div></div>
+
+<h2 id="value">Value</h2>
+<p>After fuzzing a working parameter, we now have to fuzz the correct value.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> ids.txt:FUZZ <span class="nt">-u</span> http://admin.academy.htb:PORT/admin/admin.php <span class="nt">-X</span> POST <span class="nt">-d</span> <span class="s1">'id=FUZZ'</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/x-www-form-urlencoded'</span> <span class="nt">-fs</span> xxx
+</code></pre></div></div>
+
+<h1 id="sub-domain-fuzzing">Sub-domain Fuzzing</h1>
+<p>Add to /etc/hosts</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt <span class="nt">-u</span> http://FUZZ.&lt;IP/ADDRESS&gt;:&lt;PORT&gt;/
+</code></pre></div></div>
+
+<h1 id="vhosts">Vhosts</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt <span class="nt">-u</span> http://&lt;IP/ADDRESS&gt;:&lt;PORT&gt;/ <span class="nt">-H</span> <span class="s1">'Host: FUZZ.&lt;IP/ADDRESS&gt;'</span>
+</code></pre></div></div>
+
+<h1 id="filtering-results">Filtering Results</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-h</span>
+</code></pre></div></div>
+
+      </section>
+    </div>
+  </body>
+</html>

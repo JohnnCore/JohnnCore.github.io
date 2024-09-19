@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Passwords Attack
 ## Hash Identifier
 ```bash
@@ -20,13 +24,12 @@ $ hashcat -m 3200 -a 0 -o found.txt passwd.txt /usr/share/wordlists/rockyou.txt
 ```
 
 ## Password Mutations
+`/usr/share/hashcat/rules/`
 ```bash
 $ hashcat --force password.list -r custom.rule --stdout | sort -u > mut_password.list
 ```
 
-```bash
-$ ls /usr/share/hashcat/rules/
-```
+* * *
 
 # Custom Wordlists
 ## CeWL
@@ -44,6 +47,10 @@ $ cewl https://www.inlanefreight.com -d 4 -m 6 --lowercase -w inlane.wordlist
 ## CUPP
 ```bash
 $ cupp -i
+
+sed -ri '/^.{,7}$/d' william.txt            # remove shorter than 8
+sed -ri '/[!-/:-@\[-`\{-~]+/!d' william.txt # remove no special chars
+sed -ri '/[0-9]+/!d' william.txt            # remove no numbers
 ```
 
 ## Custom list of Usernames
@@ -60,6 +67,8 @@ This is a simplified variant of brute-forcing because only composite usernames a
 ```bash
 $ hydra -C <user_pass.list> <protocol>://<IP>
 ```
+
+* * *
 
 # Services
 `Note: Although we may find services vulnerable to brute force, most applications today prevent these types of attacks. A more effective method is Password Spraying.`
@@ -109,39 +118,43 @@ $ hydra -L usernames.txt -p 'password123' 192.168.2.143 rdp
 $ hydra -L user.list -P password.list rdp://10.129.42.197`
 ```
 
+* * *
+
 # Login Attacks
 ## Default Passwords
+`/usr/share/wordlists/seclists/Passwords/Default-Credentials`
+
 ```bash
-$ hydra -C /usr/share/wordlists/seclists/Passwords/Default-Credentials/ftp-betterdefaultpasslist.txt 178.211.23.155 -s 31099 http-get /
+$ hydra -C /usr/share/wordlists/seclists/Passwords/Default-Credentials/ftp-betterdefaultpasslist.txt <IP> -s <PORT> http-get /
 ```
 
 ## Username/Password Attack
 ```bash
-$ hydra -L /usr/share/wordlists/secLists/Usernames/Names/names.txt -P /usr/share/wordlists/rockyou.txt -u -f 178.35.49.134 -s 32901 http-get /
+$ hydra -L /usr/share/wordlists/secLists/Usernames/Names/names.txt -P /usr/share/wordlists/rockyou.txt -u -f <IP> -s <PORT> http-get /
 ```
 
 ## Username Brute Force
 ```bash
-$ hydra -L /usr/share/wordlists/secLists/Usernames/Names/names.txt -p amormio -u -f 178.35.49.134 -s 32901 http-get /
+$ hydra -L /usr/share/wordlists/secLists/Usernames/Names/names.txt -p <PASSWORD> -u -f <IP> -s <PORT> http-get /
 ```
 
 ## Brute Forcing Forms
-In this situation there are only two types of http modules interesting for us:
+two types of http modules interesting for us:
 
-- `http[s]-{head|get|post}`
-- `http[s]-post-form`
+- http[s]-{head|get|post}
+- http[s]-post-form
 The 1st module serves for basic HTTP authentication, while the 2nd module is used for login forms, like .php or .aspx and others.
 
 To decide which module we need, we have to determine whether the web application uses GET or a POST form. We can test it by trying to log in and pay attention to the URL. If we recognize that any of our input was pasted into the URL, the web application uses a GET form. Otherwise, it uses a POST form.
 
 
 ```bash
-$ hydra -l admin -P /usr/share/wordlists/rockyou.txt -f 178.35.49.134 -s 32901 http-post-form "/login.php:username=^USER^&password=^PASS^:F=<form name='login'"
+$ hydra -l <admin> -P /usr/share/wordlists/rockyou.txt -f <IP> -s <PORT> http-post-form "/login.php:username=^USER^&password=^PASS^:F=<form name='login'"
 ```
 
-- First: url
-- Second: parameters to POST
-- Third: form name
+- login.php: url
+- username=^USER^&password=^PASS^: parameters to POST (Capture on Burp Suite)
+- Third: form name (Check source code)
 
 
 # Protected Files

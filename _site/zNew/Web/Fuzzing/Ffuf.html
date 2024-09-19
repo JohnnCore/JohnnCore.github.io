@@ -69,9 +69,13 @@
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/FUZZ
 </code></pre></div></div>
 
+<hr />
+
 <h1 id="extension-fuzzing">Extension Fuzzing</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/web-extensions.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/indexFUZZ
 </code></pre></div></div>
+
+<hr />
 
 <h1 id="page-fuzzing">Page Fuzzing</h1>
 <p>We will now use the same extension found previous.</p>
@@ -79,9 +83,13 @@
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/FUZZ.php
 </code></pre></div></div>
 
+<hr />
+
 <h1 id="recursive-scanning">Recursive Scanning</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt <span class="nt">-u</span> http://&lt;URL&gt;:&lt;PORT&gt;/FUZZ <span class="nt">-recursion</span> <span class="nt">-recursion-depth</span> 1 <span class="nt">-e</span> .php <span class="nt">-v</span>
 </code></pre></div></div>
+
+<hr />
 
 <h1 id="parameters">Parameters</h1>
 <h2 id="get">GET</h2>
@@ -104,16 +112,21 @@
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> ids.txt:FUZZ <span class="nt">-u</span> http://admin.academy.htb:PORT/admin/admin.php <span class="nt">-X</span> POST <span class="nt">-d</span> <span class="s1">'id=FUZZ'</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/x-www-form-urlencoded'</span> <span class="nt">-fs</span> xxx
 </code></pre></div></div>
 
+<hr />
+
 <h1 id="sub-domain-fuzzing">Sub-domain Fuzzing</h1>
 <p>Add to /etc/hosts</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt <span class="nt">-u</span> http://FUZZ.&lt;IP/ADDRESS&gt;:&lt;PORT&gt;/
 </code></pre></div></div>
 
-<h1 id="vhosts">Vhosts</h1>
+<hr />
+
+<h1 id="vhosts-fuzzing">Vhosts Fuzzing</h1>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-w</span> /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt <span class="nt">-u</span> http://&lt;IP/ADDRESS&gt;:&lt;PORT&gt;/ <span class="nt">-H</span> <span class="s1">'Host: FUZZ.&lt;IP/ADDRESS&gt;'</span>
 </code></pre></div></div>
+<hr />
 
 <h1 id="filtering-results">Filtering Results</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffuf <span class="nt">-h</span>

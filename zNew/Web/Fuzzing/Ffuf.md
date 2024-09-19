@@ -7,10 +7,14 @@ layout: default
 $ ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://<URL>:<PORT>/FUZZ
 ```
 
+* * *
+
 # Extension Fuzzing
 ```bash
 $ ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/web-extensions.txt -u http://<URL>:<PORT>/indexFUZZ
 ```
+
+* * *
 
 # Page Fuzzing
 We will now use the same extension found previous.
@@ -19,10 +23,14 @@ We will now use the same extension found previous.
 $ ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://<URL>:<PORT>/FUZZ.php
 ```
 
+* * *
+
 # Recursive Scanning
 ```bash
 $ ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://<URL>:<PORT>/FUZZ -recursion -recursion-depth 1 -e .php -v
 ```
+
+* * *
 
 # Parameters
 ## GET
@@ -49,6 +57,8 @@ After fuzzing a working parameter, we now have to fuzz the correct value.
 $ ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
 ```
 
+* * *
+
 # Sub-domain Fuzzing
 Add to /etc/hosts
 
@@ -56,11 +66,14 @@ Add to /etc/hosts
 $ ffuf -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u http://FUZZ.<IP/ADDRESS>:<PORT>/
 ```
 
-# Vhosts
+* * *
+
+# Vhosts Fuzzing
 
 ```bash
 $ ffuf -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u http://<IP/ADDRESS>:<PORT>/ -H 'Host: FUZZ.<IP/ADDRESS>'
 ```
+* * *
 
 # Filtering Results
 ```bash

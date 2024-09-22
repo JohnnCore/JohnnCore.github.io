@@ -1,0 +1,10 @@
+h2:first-of-type{
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav[aria-label="Table of contents"] ul.md-nav__list li a[href="#delete"] {
+    display: none;
+}
+

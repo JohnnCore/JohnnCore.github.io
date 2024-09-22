@@ -18,7 +18,7 @@ Credits:
 - https://gitlab.com/lagarian.smith/oscp-cheat-sheet/-/blob/master/OSCP_Notes.md
 
 
-# 
+# Table of Contents
 - Services
     - [DNS](zNew/Services/DNS)
     - [FTP](zNew/Services/FTP)
@@ -35,6 +35,17 @@ Credits:
     - [WINRM](zNew/Services/WINRM)
     - [WMI](zNew/Services/WMI)
 - Web
+    - OWASP
+        - [SQL Injection](zNew/Web/OWASP/SQLi/)
+        - [Cross-Site Scripting (XSS)](zNew/Web/OWASP/XSS/)
+        - [File Inclusion (LFI/RFI)](zNew/Web/OWASP/FI/)
+        - [Command Injection](zNew/Web/OWASP/CI/)
+        - [XML External Entity (XEE)](zNew/Web/OWASP/XEE/)
+        - [File Upload](zNew/Web/OWASP/FileUpload/)
+        - [Server Side Template Injection](zNew/Web/OWASP/SSTI/)
+        - [HTTP Verb Tampering](zNew/Web/OWASP/HTTPVerbTampering/)
+        - [Insecure Direct Object Reference (IDOR)](zNew/Web/OWASP/IDOR/)
+        - [No SQL Injection](zNew/Web/OWASP/NOSQLI/)
 - [Shell](zNew/Shell/Shell)
 - [Metasploit](zNew/Metasploit/Metasploit)
 - Privilege Escalation

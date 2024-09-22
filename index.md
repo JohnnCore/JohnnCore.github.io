@@ -59,6 +59,14 @@ end
 | ok           | good `oreos`      | hmm   |
 | ok           | good `zoute` drop | yumm  |
 
+| head1        | Payload        | DBMS |
+|-------------|------------------|------|
+| 1            | good swedish fish | MySQL  |
+| 2            | good and plenty   | MSSQL  |
+| 3            | good `oreos`      | PostgreSQL   |
+| 4            | good `zoute` drop | Oracle  |
+| 5            | good `zoute` drop | SQLite  |
+
 ### There's a horizontal rule below this.
 
 * * *
